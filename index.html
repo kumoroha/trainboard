@@ -44,18 +44,47 @@
             background-color: #ddd;
             border-radius: 5px;
         }
-        .controls label {
-            margin-right: 10px;
+        .controls h3 {
+            margin-top: 0;
         }
-        .controls input[type="text"],
-        .controls button {
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center; /* 縦方向の中央揃え */
+        }
+        .input-group label {
+            flex-shrink: 0; /* ラベルが縮小しないように */
+            width: 60px; /* ラベルの幅を固定（必要に応じて調整） */
+        }
+        .input-group input[type="text"] {
+            flex-grow: 1; /* 入力欄が残りのスペースを埋める */
             padding: 8px;
             border-radius: 3px;
             border: 1px solid #ccc;
         }
         .controls button {
+            padding: 10px 15px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
             cursor: pointer;
             background-color: #eee;
+            width: 100%; /* ボタンを親要素いっぱいに広げる */
+        }
+
+        /* 小さな画面向けの調整 */
+        @media (max-width: 600px) {
+            .input-group {
+                flex-direction: column; /* 縦並びにする */
+                align-items: flex-start; /* 左寄せ */
+            }
+            .input-group label {
+                width: auto; /* 自動調整 */
+                margin-bottom: 5px;
+            }
+            .controls button {
+                width: auto; /* 自動調整 */
+            }
         }
     </style>
 </head>
@@ -68,14 +97,22 @@
 
     <div class="controls">
         <h3>発車情報を追加</h3>
-        <label for="time">時刻:</label>
-        <input type="text" id="time" placeholder="例: 10:00"><br><br>
-        <label for="destination">行き先:</label>
-        <input type="text" id="destination" placeholder="例: 東京"><br><br>
-        <label for="platform">番線:</label>
-        <input type="text" id="platform" placeholder="例: 3"><br><br>
-        <label for="remarks">備考:</label>
-        <input type="text" id="remarks" placeholder="例: まもなく発車"><br><br>
+        <div class="input-group">
+            <label for="time">時刻:</label>
+            <input type="text" id="time" placeholder="例: 10:00">
+        </div>
+        <div class="input-group">
+            <label for="destination">行き先:</label>
+            <input type="text" id="destination" placeholder="例: 東京">
+        </div>
+        <div class="input-group">
+            <label for="platform">番線:</label>
+            <input type="text" id="platform" placeholder="例: 3">
+        </div>
+        <div class="input-group">
+            <label for="remarks">備考:</label>
+            <input type="text" id="remarks" placeholder="例: まもなく発車">
+        </div>
         <button onclick="addDeparture()">追加</button>
     </div>
 
