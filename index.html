@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>列車発車標</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        .departure-board {
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        .board-title {
+            font-size: 1.5em;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .departure-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+        }
+        .departure-item:last-child {
+            border-bottom: none;
+        }
+        .departure-item span {
+            text-align: left;
+        }
+        .departure-item .time {
+            font-weight: bold;
+        }
+        .controls {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ddd;
+            border-radius: 5px;
+        }
+        .controls label {
+            margin-right: 10px;
+        }
+        .controls input[type="text"],
+        .controls button {
+            padding: 8px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+        .controls button {
+            cursor: pointer;
+            background-color: #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="departure-board">
+        <div class="board-title">列車発車標</div>
+        <div id="departures">
+            </div>
+    </div>
+
+    <div class="controls">
+        <h3>発車情報を追加</h3>
+        <label for="time">時刻:</label>
+        <input type="text" id="time" placeholder="例: 10:00"><br><br>
+        <label for="destination">行き先:</label>
+        <input type="text" id="destination" placeholder="例: 東京"><br><br>
+        <label for="platform">番線:</label>
+        <input type="text" id="platform" placeholder="例: 3"><br><br>
+        <label for="remarks">備考:</label>
+        <input type="text" id="remarks" placeholder="例: まもなく発車"><br><br>
+        <button onclick="addDeparture()">追加</button>
+    </div>
+
+    <script>
+        const departuresDiv = document.getElementById('departures');
+        let departures = []; // 発車情報を格納する配列
+
+        function displayDepartures() {
+            departuresDiv.innerHTML = ''; // 既存の表示をクリア
+            departures.forEach(departure => {
+                const item = document.createElement('div');
+                item.classList.add('departure-item');
+                item.innerHTML = `
+                    <span class="time">${departure.time}</span>
+                    <span class="destination">${departure.destination}</span>
+                    <span class="platform">${departure.platform}番線</span>
+                    <span class="remarks">${departure.remarks}</span>
+                `;
+                departuresDiv.appendChild(item);
+            });
+        }
+
+        function addDeparture() {
+            const timeInput = document.getElementById('time');
+            const destinationInput = document.getElementById('destination');
+            const platformInput = document.getElementById('platform');
+            const remarksInput = document.getElementById('remarks');
+
+            const newDeparture = {
+                time: timeInput.value,
+                destination: destinationInput.value,
+                platform: platformInput.value,
+                remarks: remarksInput.value
+            };
+
+            departures.push(newDeparture);
+            displayDepartures();
+
+            // 入力欄をクリア
+            timeInput.value = '';
+            destinationInput.value = '';
+            platformInput.value = '';
+            remarksInput.value = '';
+        }
+
+        // 初期表示（空の状態で表示）
+        displayDepartures();
+    </script>
+</body>
+</html>
