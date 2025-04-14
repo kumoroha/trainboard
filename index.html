@@ -48,7 +48,7 @@
     </div>
 
     <script>
-const departuresDiv = document.getElementById('departures');
+        const departuresDiv = document.getElementById('departures');
         let departures = [];
 
         function displayDepartures() {
@@ -136,11 +136,11 @@ const departuresDiv = document.getElementById('departures');
                     departures = data.map(item => {
                         console.log("map内のitem:", item); // ★ 追加
                         return {
-                            time: item.departureTime,
-                            destination: item.destinationName,
-                            platform: item.platformNumber,
-                            trainName: item.trainDisplayName,
-                            remarks: item.delayInformation || '',
+                            time: item.time, // ★ 修正
+                            destination: item.destination, // ★ 修正
+                            platform: item.platform, // ★ 修正
+                            trainName: item.trainName, // ★ 修正
+                            remarks: item.remarks || '', // ★ 修正
                         };
                     });
                     console.log("加工後のdepartures:", departures); // ★ 追加
