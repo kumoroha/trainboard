@@ -57,7 +57,8 @@
             flex-shrink: 0; /* ラベルが縮小しないように */
             width: 60px; /* ラベルの幅を固定（必要に応じて調整） */
         }
-        .input-group input[type="text"] {
+        .input-group input[type="text"],
+        .input-group input[type="time"] { /* 追加 */
             flex-grow: 1; /* 入力欄が残りのスペースを埋める */
             padding: 8px;
             border-radius: 3px;
@@ -99,7 +100,7 @@
         <h3>発車情報を追加</h3>
         <div class="input-group">
             <label for="time">時刻:</label>
-            <input type="text" id="time" placeholder="例: 10:00">
+            <input type="time" id="time">
         </div>
         <div class="input-group">
             <label for="destination">行き先:</label>
