@@ -122,7 +122,7 @@ const departuresDiv = document.getElementById('departures');
         }
 
         function fetchDepartureData() {
-            const apiUrl = '/departures.json';
+            const apiUrl = 'https://kumoroha.github.io/trainboard/departures.json';
 
             fetch(apiUrl)
                 .then(response => {
