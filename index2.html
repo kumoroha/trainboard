@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>列車発車標</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        .departure-board {
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        .board-title {
+            font-size: 1.5em;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .departure-item {
+            display: grid;
+            grid-template-columns: 0.8fr 1fr 0.8fr 1fr 1fr; /* カラム数を増やし、幅を調整 */
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+        }
+        .departure-item:last-child {
+            border-bottom: none;
+        }
+        .departure-item span {
+            text-align: left;
+        }
+        .departure-item .time {
+            font-weight: bold;
+        }
+        .controls {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ddd;
+            border-radius: 5px;
+        }
+        .controls h3 {
+            margin-top: 0;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        .input-group label {
+            flex-shrink: 0;
+            width: 80px; /* ラベルの幅を調整 */
+        }
+        .input-group input[type="text"],
+        .input-group input[type="time"] {
+            flex-grow: 1;
+            padding: 8px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+        .controls button {
+            padding: 10px 15px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            background-color: #eee;
+            width: 100%;
+        }
+        @media (max-width: 600px) {
+            .departure-item {
+                grid-template-columns: 1fr; /* 縦並び */
+            }
+            .input-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .input-group label {
+                width: auto;
+                margin-bottom: 5px;
+            }
+            .controls button {
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="departure-board">
+        <div class="board-title">列車発車標</div>
+        <div id="departures">
+            </div>
+    </div>
+
+    <div class="controls">
+        <h3>発車情報を追加</h3>
+        <div class="input-group">
+            <label for="time">時刻:</label>
+            <input type="time" id="time">
+        </div>
+        <div class="input-group">
+            <label for="destination">行き先:</label>
+            <input type="text" id="destination" placeholder="例: 東京">
+        </div>
+        <div class="input-group">
+            <label for="platform">番線:</label>
+            <input type="text" id="platform" placeholder="例: 3">
+        </div>
+        <div class="input-group">
+            <label for="trainName">列車名:</label>
+            <input type="text" id="trainName" placeholder="例: しなの">
+        </div>
+        <div class="input-group">
+            <label for="remarks">備考:</label>
+            <input type="text" id="remarks" placeholder="例: まもなく発車">
+        </div>
+        <button onclick="addDeparture()">追加</button>
+    </div>
+
+    <script>
+        const departuresDiv = document.getElementById('departures');
+        let departures = [];
+
+        function displayDepartures() {
+            departuresDiv.innerHTML = '';
+            const now = new Date();
+            const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+            departures.forEach(departure => {
+                const item = document.createElement('div');
+                item.classList.add('departure-item');
+
+                const departureTimeParts = departure.time.split(':');
+                const departureMinutes = parseInt(departureTimeParts[0]) * 60 + parseInt(departureTimeParts[1]);
+                let remainingMinutes = departureMinutes - nowMinutes;
+
+                let remainingTimeText = '';
+                if (remainingMinutes > 0) {
+                    remainingTimeText = `あと ${remainingMinutes} 分`;
+                } else if (remainingMinutes === 0) {
+                    remainingTimeText = 'まもなく発車';
+                } else {
+                    remainingTimeText = '発車済';
+                }
+
+                item.innerHTML = `
+                    <span class="time">${departure.time}</span>
+                    <span class="platform">${departure.platform}番線</span>
+                    <span class="trainName">${departure.trainName}</span>
+                    <span class="destination">${departure.destination}</span>
+                    <span class="remarks">${departure.remarks} ${remainingTimeText}</span>
+                `;
+                departuresDiv.appendChild(item);
+            });
+        }
+
+        function loadDepartures() {
+            fetch('departures.json')
+                .then(response => response.json())
+                .then(data => {
+                    departures = data;
+                    displayDepartures();
+                })
+                .catch(error => {
+                    console.error('JSONファイルの読み込みエラー:', error);
+                    departuresDiv.textContent = '発車情報の読み込みに失敗しました。';
+                });
+        }
+
+        function addDeparture() {
+            const timeInput = document.getElementById('time');
+            const destinationInput = document.getElementById('destination');
+            const platformInput = document.getElementById('platform');
+            const trainNameInput = document.getElementById('trainName');
+            const remarksInput = document.getElementById('remarks');
+
+            const newDeparture = {
+                time: timeInput.value,
+                destination: destinationInput.value,
+                platform: platformInput.value,
+                trainName: trainNameInput.value,
+                remarks: remarksInput.value
+            };
+
+            departures.push(newDeparture);
+            displayDepartures();
+
+            // ここで departures 配列の内容を departures.json ファイルに書き込む処理を追加することも可能です
+            // (Node.jsなどのサーバーサイド環境が必要になります)
+
+            timeInput.value = '';
+            destinationInput.value = '';
+            platformInput.value = '';
+            trainNameInput.value = '';
+            remarksInput.value = '';
+        }
+
+        // ページ読み込み時にJSONファイルを読み込む
+        loadDepartures();
+    </script>
+</body>
+</html>
