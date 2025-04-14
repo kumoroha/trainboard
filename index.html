@@ -20,14 +20,34 @@
         .board-title {
             font-size: 1.5em;
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+        }
+        .board-header {
+            display: grid;
+            grid-template-columns: 0.8fr 0.8fr 1fr 1fr 1fr 1fr;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 2px solid #fff;
+            margin-bottom: 5px;
+        }
+        .board-header span {
+            text-align: left;
+            font-weight: bold;
+        }
+        .departure-list {
+            overflow: hidden; /* スライドのアニメーションのために追加 */
         }
         .departure-item {
             display: grid;
-            grid-template-columns: 0.8fr 1fr 0.8fr 1fr 1fr 1fr; /* カラム数を調整 */
+            grid-template-columns: 0.8fr 0.8fr 1fr 1fr 1fr 1fr;
             gap: 10px;
             padding: 8px 0;
             border-bottom: 1px solid #333;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; /* アニメーション用 */
+        }
+        .departure-item.departed {
+            opacity: 0;
+            transform: translateY(-100%);
         }
         .departure-item:last-child {
             border-bottom: none;
@@ -43,81 +63,111 @@
 <body>
     <div class="departure-board">
         <div class="board-title">列車発車標</div>
-        <div id="departures">
+        <div class="board-header">
+            <span>時刻</span>
+            <span>番線</span>
+            <span>列車名</span>
+            <span>行き先</span>
+            <span>備考</span>
+            <span>発車まで</span>
+        </div>
+        <div id="departures" class="departure-list">
             </div>
     </div>
 
     <script>
         const departuresDiv = document.getElementById('departures');
-        let departures = [];
+        let allDepartures = []; // APIから取得したすべての列車情報を格納
+        let displayedDepartures = []; // 表示中の列車情報を格納
+        const maxDisplayCount = 4; // 表示する最大件数
 
         function displayDepartures() {
             departuresDiv.innerHTML = '';
             const now = new Date();
             const nowMinutes = now.getHours() * 60 + now.getMinutes();
-            let hasUpcomingDeparture = false;
 
-            departures.forEach(departure => {
-                console.log("displayDepartures内のdeparture:", departure); // ★ 追加
-                console.log("departure.time:", departure ? departure.time : 'departureはundefined'); // ★ 追加
-                if (departure && typeof departure.time === 'string') { // ★ 安全な呼び出し
-                    const departureTimeParts = departure.time.split(':');
-                    const departureMinutes = parseInt(departureTimeParts[0]) * 60 + parseInt(departureTimeParts[1]);
-                    let remainingMinutes = departureMinutes - nowMinutes;
-
-                    let remainingTimeText = '';
-                    if (remainingMinutes > 0) {
-                        remainingTimeText = `あと ${remainingMinutes} 分`;
-                        hasUpcomingDeparture = true;
-                    } else if (remainingMinutes === 0) {
-                        remainingTimeText = 'まもなく発車';
-                        hasUpcomingDeparture = true;
-                    } else {
-                        remainingTimeText = '発車済';
-                    }
-
-                    const item = document.createElement('div');
-                    item.classList.add('departure-item');
-                    item.innerHTML = `
-                        <span class="time">${departure.time}</span>
-                        <span class="platform">${departure.platform}番線</span>
-                        <span class="trainName">${departure.trainName}</span>
-                        <span class="destination">${departure.destination}</span>
-                        <span class="remarks">${departure.remarks}</span>
-                        <span>${remainingTimeText}</span>
-                    `;
-                    departuresDiv.appendChild(item);
-                } else {
-                    console.warn("時刻データが無効なため、この列車は表示しません:", departure); // ★ 警告表示
-                    // または、何らかの代替表示を行う
-                    const item = document.createElement('div');
-                    item.classList.add('departure-item');
-                    item.innerHTML = `
-                        <span class="time">--:--</span>
-                        <span class="platform">--</span>
-                        <span class="trainName">--</span>
-                        <span class="destination">--</span>
-                        <span class="remarks">時刻データなし</span>
-                        <span>--</span>
-                    `;
-                    departuresDiv.appendChild(item);
-                }
+            // 現在時刻以降の列車でソート
+            const upcomingDepartures = allDepartures.filter(departure => {
+                const departureTimeParts = departure.time.split(':');
+                const departureMinutes = parseInt(departureTimeParts[0]) * 60 + parseInt(departureTimeParts[1]);
+                return departureMinutes >= nowMinutes;
+            }).sort((a, b) => {
+                const timeA = a.time.replace(':', '');
+                const timeB = b.time.replace(':', '');
+                return parseInt(timeA) - parseInt(timeB);
             });
 
-            if (!hasUpcomingDeparture && departures.length > 0) {
-                const messageDiv = document.createElement('div');
-                messageDiv.textContent = '今日の列車はもうありません。';
-                messageDiv.style.padding = '10px';
-                messageDiv.style.textAlign = 'center';
-                departuresDiv.appendChild(messageDiv);
-            } else if (departures.length === 0 && departuresDiv.textContent === '発車情報の取得に失敗しました。') {
-                // APIエラーメッセージが表示されている場合はそのままにする
-            } else if (departures.length === 0) {
-                const messageDiv = document.createElement('div');
-                messageDiv.textContent = '発車情報はありません。';
-                messageDiv.style.padding = '10px';
-                messageDiv.style.textAlign = 'center';
-                departuresDiv.appendChild(messageDiv);
+            displayedDepartures = upcomingDepartures.slice(0, maxDisplayCount);
+
+            displayedDepartures.forEach(departure => {
+                const item = document.createElement('div');
+                item.classList.add('departure-item');
+
+                const departureTimeParts = departure.time.split(':');
+                const departureMinutes = parseInt(departureTimeParts[0]) * 60 + parseInt(departureTimeParts[1]);
+                let remainingMinutes = departureMinutes - nowMinutes;
+
+                let remainingTimeText = '';
+                if (remainingMinutes > 0) {
+                    remainingTimeText = `あと ${remainingMinutes} 分`;
+                } else if (remainingMinutes === 0) {
+                    remainingTimeText = 'まもなく発車';
+                } else {
+                    remainingTimeText = '発車済';
+                }
+
+                item.innerHTML = `
+                    <span class="time">${departure.time}</span>
+                    <span class="platform">${departure.platform}番線</span>
+                    <span class="trainName">${departure.trainName}</span>
+                    <span class="destination">${departure.destination}</span>
+                    <span class="remarks">${departure.remarks}</span>
+                    <span>${remainingTimeText}</span>
+                `;
+                departuresDiv.appendChild(item);
+            });
+
+            // 一番上の列車が出発時刻を過ぎていたら、アニメーションで消去し、新しい列車を追加
+            if (displayedDepartures.length > 0 && displayedDepartures[0].time) {
+                const firstDepartureTimeParts = displayedDepartures[0].time.split(':');
+                const firstDepartureMinutes = parseInt(firstDepartureTimeParts[0]) * 60 + parseInt(firstDepartureTimeParts[1]);
+                if (firstDepartureMinutes < nowMinutes) {
+                    const departedItem = departuresDiv.firstChild;
+                    if (departedItem) {
+                        departedItem.classList.add('departed');
+                        setTimeout(() => {
+                            departuresDiv.removeChild(departedItem);
+                            // 新しい列車があれば追加
+                            if (upcomingDepartures.length > maxDisplayCount && displayedDepartures.length < maxDisplayCount) {
+                                const nextDeparture = upcomingDepartures[maxDisplayCount];
+                                const newItem = document.createElement('div');
+                                newItem.classList.add('departure-item');
+                                const nextDepartureTimeParts = nextDeparture.time.split(':');
+                                const nextDepartureMinutes = parseInt(nextDepartureTimeParts[0]) * 60 + parseInt(nextDepartureTimeParts[1]);
+                                let nextRemainingMinutes = nextDepartureMinutes - nowMinutes;
+                                let nextRemainingTimeText = '';
+                                if (nextRemainingMinutes > 0) {
+                                    nextRemainingTimeText = `あと ${nextRemainingMinutes} 分`;
+                                } else if (nextRemainingMinutes === 0) {
+                                    nextRemainingTimeText = 'まもなく発車';
+                                } else {
+                                    nextRemainingTimeText = '発車済';
+                                }
+                                newItem.innerHTML = `
+                                    <span class="time">${nextDeparture.time}</span>
+                                    <span class="platform">${nextDeparture.platform}番線</span>
+                                    <span class="trainName">${nextDeparture.trainName}</span>
+                                    <span class="destination">${nextDeparture.destination}</span>
+                                    <span class="remarks">${nextDeparture.remarks}</span>
+                                    <span>${nextRemainingTimeText}</span>
+                                `;
+                                departuresDiv.appendChild(newItem);
+                                displayedDepartures.push(nextDeparture);
+                                displayedDepartures.shift(); // 先頭を削除
+                            }
+                        }, 500); // アニメーションの時間に合わせて調整
+                    }
+                }
             }
         }
 
@@ -132,19 +182,11 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log("APIからのデータ:", data); // ★ 追加
-                    departures = data.map(item => {
-                        console.log("map内のitem:", item); // ★ 追加
-                        return {
-                            time: item.time, // ★ 修正
-                            destination: item.destination, // ★ 修正
-                            platform: item.platform, // ★ 修正
-                            trainName: item.trainName, // ★ 修正
-                            remarks: item.remarks || '', // ★ 修正
-                        };
-                    });
-                    console.log("加工後のdepartures:", departures); // ★ 追加
+                    console.log("APIからのデータ:", data);
+                    allDepartures = data; // すべての列車情報を格納
                     displayDepartures();
+                    // 定期的に更新 (1分ごと)
+                    setInterval(displayDepartures, 60000);
                 })
                 .catch(error => {
                     console.error('APIからのデータ取得エラー:', error);
@@ -154,9 +196,6 @@
 
         // ページ読み込み時にAPIからデータを取得
         fetchDepartureData();
-
-        // (必要に応じて定期的にAPIを呼び出すように設定)
-        // setInterval(fetchDepartureData, 30000);
     </script>
 </body>
 </html>
