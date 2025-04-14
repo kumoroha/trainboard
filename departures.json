@@ -1,20 +1,20 @@
 [
   {
-    "time": "13:20",
+    "time": "13:20:00",
     "destination": "名古屋",
     "platform": "1",
     "trainName": "しなの15号",
     "remarks": ""
   },
   {
-    "time": "13:30",
+    "time": "13:30:00",
     "destination": "金山",
     "platform": "2",
     "trainName": "普通",
     "remarks": "一部特別車"
   },
   {
-    "time": "13:45",
+    "time": "13:45:00",
     "destination": "中部国際空港",
     "platform": "3",
     "trainName": "ミュースカイ",
