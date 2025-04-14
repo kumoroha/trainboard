@@ -48,19 +48,19 @@
     </div>
 
     <script>
-        const departuresDiv = document.getElementById('departures');
+const departuresDiv = document.getElementById('departures');
         let departures = [];
 
         function displayDepartures() {
             departuresDiv.innerHTML = '';
             const now = new Date();
             const nowMinutes = now.getHours() * 60 + now.getMinutes();
+            let hasUpcomingDeparture = false;
 
             departures.forEach(departure => {
                 const item = document.createElement('div');
                 item.classList.add('departure-item');
 
-                // APIから取得するデータの構造に合わせて調整してください
                 const departureTimeParts = departure.time.split(':');
                 const departureMinutes = parseInt(departureTimeParts[0]) * 60 + parseInt(departureTimeParts[1]);
                 let remainingMinutes = departureMinutes - nowMinutes;
@@ -68,8 +68,10 @@
                 let remainingTimeText = '';
                 if (remainingMinutes > 0) {
                     remainingTimeText = `あと ${remainingMinutes} 分`;
+                    hasUpcomingDeparture = true; // まだ発車していない列車がある
                 } else if (remainingMinutes === 0) {
                     remainingTimeText = 'まもなく発車';
+                    hasUpcomingDeparture = true; // まだ発車していない列車がある (直前)
                 } else {
                     remainingTimeText = '発車済';
                 }
@@ -84,10 +86,27 @@
                 `;
                 departuresDiv.appendChild(item);
             });
+
+            // すべての列車の時刻が過ぎていた場合のメッセージ表示
+            if (!hasUpcomingDeparture && departures.length > 0) {
+                const messageDiv = document.createElement('div');
+                messageDiv.textContent = '今日の列車はもうありません。';
+                messageDiv.style.padding = '10px';
+                messageDiv.style.textAlign = 'center';
+                departuresDiv.appendChild(messageDiv);
+            } else if (departures.length === 0 && departuresDiv.textContent === '発車情報の取得に失敗しました。') {
+                // APIエラーメッセージが表示されている場合はそのままにする
+            } else if (departures.length === 0) {
+                const messageDiv = document.createElement('div');
+                messageDiv.textContent = '発車情報はありません。';
+                messageDiv.style.padding = '10px';
+                messageDiv.style.textAlign = 'center';
+                departuresDiv.appendChild(messageDiv);
+            }
         }
 
         function fetchDepartureData() {
-            const apiUrl = 'ここにAPIのエンドポイントURLを記述してください'; // 実際のAPI URLに置き換えてください
+            const apiUrl = 'departures.json';
 
             fetch(apiUrl)
                 .then(response => {
@@ -97,20 +116,19 @@
                     return response.json();
                 })
                 .then(data => {
-                    // APIから取得したデータに基づいて departures 配列を更新
-                    // データの構造はAPIによって異なるため、適切にマッピングする必要があります
                     departures = data.map(item => ({
-                        time: item.departureTime, // APIの時刻のキーに合わせてください
-                        destination: item.destinationName, // APIの行先のキーに合わせてください
-                        platform: item.platformNumber, // APIの番線のキーに合わせてください
-                        trainName: item.trainDisplayName, // APIの列車名のキーに合わせてください
-                        remarks: item.delayInformation || '', // APIの備考のキーに合わせてください（遅延情報など）
+                        time: item.departureTime,
+                        destination: item.destinationName,
+                        platform: item.platformNumber,
+                        trainName: item.trainDisplayName,
+                        remarks: item.delayInformation || '',
                     }));
                     displayDepartures();
                 })
                 .catch(error => {
                     console.error('APIからのデータ取得エラー:', error);
                     departuresDiv.textContent = '発車情報の取得に失敗しました。';
+                    // エラー発生時も「今日の列車はもうありません」を表示しないように修正
                 });
         }
 
@@ -118,7 +136,7 @@
         fetchDepartureData();
 
         // (必要に応じて定期的にAPIを呼び出すように設定)
-        // setInterval(fetchDepartureData, 30000); // 例: 30秒ごとに更新
+        // setInterval(fetchDepartureData, 30000);
     </script>
 </body>
 </html>
