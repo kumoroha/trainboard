@@ -58,36 +58,52 @@ const departuresDiv = document.getElementById('departures');
             let hasUpcomingDeparture = false;
 
             departures.forEach(departure => {
-                const item = document.createElement('div');
-                item.classList.add('departure-item');
+                console.log("displayDepartures内のdeparture:", departure); // ★ 追加
+                console.log("departure.time:", departure ? departure.time : 'departureはundefined'); // ★ 追加
+                if (departure && typeof departure.time === 'string') { // ★ 安全な呼び出し
+                    const departureTimeParts = departure.time.split(':');
+                    const departureMinutes = parseInt(departureTimeParts[0]) * 60 + parseInt(departureTimeParts[1]);
+                    let remainingMinutes = departureMinutes - nowMinutes;
 
-                const departureTimeParts = departure.time.split(':');
-                const departureMinutes = parseInt(departureTimeParts[0]) * 60 + parseInt(departureTimeParts[1]);
-                let remainingMinutes = departureMinutes - nowMinutes;
+                    let remainingTimeText = '';
+                    if (remainingMinutes > 0) {
+                        remainingTimeText = `あと ${remainingMinutes} 分`;
+                        hasUpcomingDeparture = true;
+                    } else if (remainingMinutes === 0) {
+                        remainingTimeText = 'まもなく発車';
+                        hasUpcomingDeparture = true;
+                    } else {
+                        remainingTimeText = '発車済';
+                    }
 
-                let remainingTimeText = '';
-                if (remainingMinutes > 0) {
-                    remainingTimeText = `あと ${remainingMinutes} 分`;
-                    hasUpcomingDeparture = true; // まだ発車していない列車がある
-                } else if (remainingMinutes === 0) {
-                    remainingTimeText = 'まもなく発車';
-                    hasUpcomingDeparture = true; // まだ発車していない列車がある (直前)
+                    const item = document.createElement('div');
+                    item.classList.add('departure-item');
+                    item.innerHTML = `
+                        <span class="time">${departure.time}</span>
+                        <span class="platform">${departure.platform}番線</span>
+                        <span class="trainName">${departure.trainName}</span>
+                        <span class="destination">${departure.destination}</span>
+                        <span class="remarks">${departure.remarks}</span>
+                        <span>${remainingTimeText}</span>
+                    `;
+                    departuresDiv.appendChild(item);
                 } else {
-                    remainingTimeText = '発車済';
+                    console.warn("時刻データが無効なため、この列車は表示しません:", departure); // ★ 警告表示
+                    // または、何らかの代替表示を行う
+                    const item = document.createElement('div');
+                    item.classList.add('departure-item');
+                    item.innerHTML = `
+                        <span class="time">--:--</span>
+                        <span class="platform">--</span>
+                        <span class="trainName">--</span>
+                        <span class="destination">--</span>
+                        <span class="remarks">時刻データなし</span>
+                        <span>--</span>
+                    `;
+                    departuresDiv.appendChild(item);
                 }
-
-                item.innerHTML = `
-                    <span class="time">${departure.time}</span>
-                    <span class="platform">${departure.platform}番線</span>
-                    <span class="trainName">${departure.trainName}</span>
-                    <span class="destination">${departure.destination}</span>
-                    <span class="remarks">${departure.remarks}</span>
-                    <span>${remainingTimeText}</span>
-                `;
-                departuresDiv.appendChild(item);
             });
 
-            // すべての列車の時刻が過ぎていた場合のメッセージ表示
             if (!hasUpcomingDeparture && departures.length > 0) {
                 const messageDiv = document.createElement('div');
                 messageDiv.textContent = '今日の列車はもうありません。';
@@ -106,7 +122,7 @@ const departuresDiv = document.getElementById('departures');
         }
 
         function fetchDepartureData() {
-            const apiUrl = 'departures.json';
+            const apiUrl = 'ここにAPIのエンドポイントURLを記述してください';
 
             fetch(apiUrl)
                 .then(response => {
@@ -116,19 +132,23 @@ const departuresDiv = document.getElementById('departures');
                     return response.json();
                 })
                 .then(data => {
-                    departures = data.map(item => ({
-                        time: item.departureTime,
-                        destination: item.destinationName,
-                        platform: item.platformNumber,
-                        trainName: item.trainDisplayName,
-                        remarks: item.delayInformation || '',
-                    }));
+                    console.log("APIからのデータ:", data); // ★ 追加
+                    departures = data.map(item => {
+                        console.log("map内のitem:", item); // ★ 追加
+                        return {
+                            time: item.departureTime,
+                            destination: item.destinationName,
+                            platform: item.platformNumber,
+                            trainName: item.trainDisplayName,
+                            remarks: item.delayInformation || '',
+                        };
+                    });
+                    console.log("加工後のdepartures:", departures); // ★ 追加
                     displayDepartures();
                 })
                 .catch(error => {
                     console.error('APIからのデータ取得エラー:', error);
                     departuresDiv.textContent = '発車情報の取得に失敗しました。';
-                    // エラー発生時も「今日の列車はもうありません」を表示しないように修正
                 });
         }
 
