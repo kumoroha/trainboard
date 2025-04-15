@@ -124,5 +124,54 @@
     "platform": "7",
     "trainName": "普通",
     "remarks": ""
+  },
+  {
+    "time": "7:00",
+    "destination": "京都",
+    "platform": "7",
+    "trainName": "普通",
+    "remarks": ""
+  },
+  {
+    "time": "7:03",
+    "destination": "米原",
+    "platform": "9",
+    "trainName": "新快速",
+    "remarks": ""
+  },
+  {
+    "time": "7:09",
+    "destination": "野洲",
+    "platform": "9",
+    "trainName": "新快速2号",
+    "remarks": "9号車は有料座席A-SEAT"
+  },
+  {
+    "time": "7:09",
+    "destination": "京都",
+    "platform": "7",
+    "trainName": "普通",
+    "remarks": ""
+  },
+  {
+    "time": "7:15",
+    "destination": "米原",
+    "platform": "10",
+    "trainName": "快速",
+    "remarks": "島本・山崎・向日町・桂川・西大路通過"
+  },
+  {
+    "time": "7:18",
+    "destination": "高槻",
+    "platform": "7",
+    "trainName": "普通",
+    "remarks": ""
+  },
+  {
+    "time": "7:20",
+    "destination": "近江塩津",
+    "platform": "9",
+    "trainName": "新快速",
+    "remarks": "琵琶湖線経由"
   }
 ]
