@@ -1,30 +1,37 @@
 [
   {
-    "time": "19:20",
-    "destination": "名古屋",
-    "platform": "1",
-    "trainName": "しなの15号",
+    "time": "5:00",
+    "destination": "京都",
+    "platform": "8",
+    "trainName": "普通",
     "remarks": ""
   },
   {
-    "time": "13:30",
-    "destination": "金山",
-    "platform": "2",
+    "time": "5:14",
+    "destination": "京都",
+    "platform": "7",
     "trainName": "普通",
-    "remarks": "一部特別車"
+    "remarks": ""
   },
   {
-    "time": "13:45",
-    "destination": "中部国際空港",
-    "platform": "3",
-    "trainName": "ミュースカイ",
-    "remarks": "全車特別車"
+    "time": "5:39",
+    "destination": "京都",
+    "platform": "7",
+    "trainName": "普通",
+    "remarks": ""
   },
   {
-    "time": "20:00",
-    "destination": "岐阜",
-    "platform": "4",
+    "time": "5:46",
+    "destination": "吹田",
+    "platform": "7",
+    "trainName": "普通",
+    "remarks": ""
+  }
+  {
+    "time": "5:54",
+    "destination": "長浜",
+    "platform": "8",
     "trainName": "快速",
-    "remarks": "停車駅にご注意ください"
+    "remarks": "島本・山崎・向日町・桂川・西大路通過"
   }
 ]
