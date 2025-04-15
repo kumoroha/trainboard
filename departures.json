@@ -54,5 +54,47 @@
     "platform": "8",
     "trainName": "快速",
     "remarks": "島本・山崎・向日町・桂川・西大路通過"
+  },
+  {
+    "time": "6:20",
+    "destination": "高槻",
+    "platform": "7",
+    "trainName": "普通",
+    "remarks": ""
+  },
+  {
+    "time": "6:27",
+    "destination": "京都",
+    "platform": "7",
+    "trainName": "普通",
+    "remarks": ""
+  },
+  {
+    "time": "6:33",
+    "destination": "米原",
+    "platform": "9",
+    "trainName": "新快速",
+    "remarks": ""
+  },
+  {
+    "time": "6:35",
+    "destination": "米原",
+    "platform": "8",
+    "trainName": "快速",
+    "remarks": "島本・山崎・向日町・桂川・西大路通過"
+  },
+  {
+    "time": "6:35",
+    "destination": "高槻",
+    "platform": "7",
+    "trainName": "普通",
+    "remarks": ""
+  },
+  {
+    "time": "6:40",
+    "destination": "京都",
+    "platform": "7",
+    "trainName": "普通",
+    "remarks": ""
   }
 ]
