@@ -80,6 +80,7 @@
         let allDepartures = []; // APIから取得したすべての列車情報を格納
         let displayedDepartures = []; // 表示中の列車情報を格納
         const maxDisplayCount = 4; // 表示する最大件数
+        let noUpcomingTrainsMessageShown = false; // 「今日の電車はもうありません」メッセージが表示されたかどうかのフラグ
 
         function displayDepartures() {
             departuresDiv.innerHTML = '';
@@ -99,73 +100,88 @@
 
             displayedDepartures = upcomingDepartures.slice(0, maxDisplayCount);
 
-            displayedDepartures.forEach(departure => {
-                const item = document.createElement('div');
-                item.classList.add('departure-item');
+            if (displayedDepartures.length === 0 && allDepartures.length > 0 && !noUpcomingTrainsMessageShown) {
+                const messageDiv = document.createElement('div');
+                messageDiv.textContent = '今日の電車はもうありません。';
+                messageDiv.style.padding = '10px';
+                messageDiv.style.textAlign = 'center';
+                departuresDiv.appendChild(messageDiv);
+                noUpcomingTrainsMessageShown = true;
+            } else if (displayedDepartures.length === 0 && allDepartures.length === 0 && departuresDiv.textContent !== '発車情報の取得に失敗しました。') {
+                const messageDiv = document.createElement('div');
+                messageDiv.textContent = '発車情報はありません。';
+                messageDiv.style.padding = '10px';
+                messageDiv.style.textAlign = 'center';
+                departuresDiv.appendChild(messageDiv);
+            } else {
+                displayedDepartures.forEach(departure => {
+                    const item = document.createElement('div');
+                    item.classList.add('departure-item');
 
-                const departureTimeParts = departure.time.split(':');
-                const departureMinutes = parseInt(departureTimeParts[0]) * 60 + parseInt(departureTimeParts[1]);
-                let remainingMinutes = departureMinutes - nowMinutes;
+                    const departureTimeParts = departure.time.split(':');
+                    const departureMinutes = parseInt(departureTimeParts[0]) * 60 + parseInt(departureTimeParts[1]);
+                    let remainingMinutes = departureMinutes - nowMinutes;
 
-                let remainingTimeText = '';
-                if (remainingMinutes > 0) {
-                    remainingTimeText = `あと ${remainingMinutes} 分`;
-                } else if (remainingMinutes === 0) {
-                    remainingTimeText = 'まもなく発車';
-                } else {
-                    remainingTimeText = '発車済';
-                }
+                    let remainingTimeText = '';
+                    if (remainingMinutes > 0) {
+                        remainingTimeText = `あと ${remainingMinutes} 分`;
+                    } else if (remainingMinutes === 0) {
+                        remainingTimeText = 'まもなく発車';
+                    } else {
+                        remainingTimeText = '発車済';
+                    }
 
-                item.innerHTML = `
-                    <span class="time">${departure.time}</span>
-                    <span class="platform">${departure.platform}番線</span>
-                    <span class="trainName">${departure.trainName}</span>
-                    <span class="destination">${departure.destination}</span>
-                    <span class="remarks">${departure.remarks}</span>
-                    <span>${remainingTimeText}</span>
-                `;
-                departuresDiv.appendChild(item);
-            });
+                    item.innerHTML = `
+                        <span class="time">${departure.time}</span>
+                        <span class="platform">${departure.platform}番線</span>
+                        <span class="trainName">${departure.trainName}</span>
+                        <span class="destination">${departure.destination}</span>
+                        <span class="remarks">${departure.remarks}</span>
+                        <span>${remainingTimeText}</span>
+                    `;
+                    departuresDiv.appendChild(item);
+                });
 
-            // 一番上の列車が出発時刻を過ぎていたら、アニメーションで消去し、新しい列車を追加
-            if (displayedDepartures.length > 0 && displayedDepartures[0].time) {
-                const firstDepartureTimeParts = displayedDepartures[0].time.split(':');
-                const firstDepartureMinutes = parseInt(firstDepartureTimeParts[0]) * 60 + parseInt(firstDepartureTimeParts[1]);
-                if (firstDepartureMinutes < nowMinutes) {
-                    const departedItem = departuresDiv.firstChild;
-                    if (departedItem) {
-                        departedItem.classList.add('departed');
-                        setTimeout(() => {
-                            departuresDiv.removeChild(departedItem);
-                            // 新しい列車があれば追加
-                            if (upcomingDepartures.length > maxDisplayCount && displayedDepartures.length < maxDisplayCount) {
-                                const nextDeparture = upcomingDepartures[maxDisplayCount];
-                                const newItem = document.createElement('div');
-                                newItem.classList.add('departure-item');
-                                const nextDepartureTimeParts = nextDeparture.time.split(':');
-                                const nextDepartureMinutes = parseInt(nextDepartureTimeParts[0]) * 60 + parseInt(nextDepartureTimeParts[1]);
-                                let nextRemainingMinutes = nextDepartureMinutes - nowMinutes;
-                                let nextRemainingTimeText = '';
-                                if (nextRemainingMinutes > 0) {
-                                    nextRemainingTimeText = `あと ${nextRemainingMinutes} 分`;
-                                } else if (nextRemainingMinutes === 0) {
-                                    nextRemainingTimeText = 'まもなく発車';
-                                } else {
-                                    nextRemainingTimeText = '発車済';
-                                }
-                                newItem.innerHTML = `
-                                    <span class="time">${nextDeparture.time}</span>
-                                    <span class="platform">${nextDeparture.platform}番線</span>
-                                    <span class="trainName">${nextDeparture.trainName}</span>
-                                    <span class="destination">${nextDeparture.destination}</span>
-                                    <span class="remarks">${nextDeparture.remarks}</span>
-                                    <span>${nextRemainingTimeText}</span>
-                                `;
-                                departuresDiv.appendChild(newItem);
-                                displayedDepartures.push(nextDeparture);
+                // 一番上の列車が出発時刻を過ぎていたら、アニメーションで消去し、新しい列車を追加
+                if (displayedDepartures.length > 0 && displayedDepartures[0].time) {
+                    const firstDepartureTimeParts = displayedDepartures[0].time.split(':');
+                    const firstDepartureMinutes = parseInt(firstDepartureTimeParts[0]) * 60 + parseInt(firstDepartureTimeParts[1]);
+                    if (firstDepartureMinutes < nowMinutes) {
+                        const departedItem = departuresDiv.firstChild;
+                        if (departedItem) {
+                            departedItem.classList.add('departed');
+                            setTimeout(() => {
+                                departuresDiv.removeChild(departedItem);
                                 displayedDepartures.shift(); // 先頭を削除
-                            }
-                        }, 500); // アニメーションの時間に合わせて調整
+                                // 新しい列車があれば追加
+                                if (upcomingDepartures.length > displayedDepartures.length) {
+                                    const nextDeparture = upcomingDepartures[displayedDepartures.length];
+                                    const newItem = document.createElement('div');
+                                    newItem.classList.add('departure-item');
+                                    const nextDepartureTimeParts = nextDeparture.time.split(':');
+                                    const nextDepartureMinutes = parseInt(nextDepartureTimeParts[0]) * 60 + parseInt(nextDepartureTimeParts[1]);
+                                    let nextRemainingMinutes = nextDepartureMinutes - nowMinutes;
+                                    let nextRemainingTimeText = '';
+                                    if (nextRemainingMinutes > 0) {
+                                        nextRemainingTimeText = `あと ${nextRemainingMinutes} 分`;
+                                    } else if (nextRemainingMinutes === 0) {
+                                        nextRemainingTimeText = 'まもなく発車';
+                                    } else {
+                                        nextRemainingTimeText = '発車済';
+                                    }
+                                    newItem.innerHTML = `
+                                        <span class="time">${nextDeparture.time}</span>
+                                        <span class="platform">${nextDeparture.platform}番線</span>
+                                        <span class="trainName">${nextDeparture.trainName}</span>
+                                        <span class="destination">${nextDeparture.destination}</span>
+                                        <span class="remarks">${nextDeparture.remarks}</span>
+                                        <span>${nextRemainingTimeText}</span>
+                                    `;
+                                    departuresDiv.appendChild(newItem);
+                                    displayedDepartures.push(nextDeparture);
+                                }
+                            }, 500); // アニメーションの時間に合わせて調整
+                        }
                     }
                 }
             }
@@ -183,7 +199,13 @@
                 })
                 .then(data => {
                     console.log("APIからのデータ:", data);
-                    allDepartures = data; // すべての列車情報を格納
+                    allDepartures = data.map(item => ({
+                        time: item.time,
+                        destination: item.destination,
+                        platform: item.platform,
+                        trainName: item.trainName,
+                        remarks: item.remarks || '',
+                    }));
                     displayDepartures();
                     // 定期的に更新 (1分ごと)
                     setInterval(displayDepartures, 60000);
