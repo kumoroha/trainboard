@@ -172,6 +172,27 @@
     "destination": "近江塩津",
     "platform": "9",
     "trainName": "新快速",
-    "remarks": "琵琶湖線経由"
+    "remarks": "琵琶湖線・米原経由"
+  },
+  {
+    "time": "7:25",
+    "destination": "草津",
+    "platform": "7",
+    "trainName": "普通",
+    "remarks": ""
+  },
+  {
+    "time": "7:30",
+    "destination": "米原",
+    "platform": "10",
+    "trainName": "快速",
+    "remarks": "島本・山崎・向日町・桂川・西大路通過"
+  },
+  {
+    "time": "7:34",
+    "destination": "野洲",
+    "platform": "9",
+    "trainName": "新快速",
+    "remarks": ""
   }
 ]
