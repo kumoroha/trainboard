@@ -194,5 +194,54 @@
     "platform": "9",
     "trainName": "新快速",
     "remarks": ""
+  },
+  {
+    "time": "7:37",
+    "destination": "高槻",
+    "platform": "7",
+    "trainName": "普通",
+    "remarks": ""
+  },
+  {
+    "time": "7:43",
+    "destination": "米原",
+    "platform": "10",
+    "trainName": "快速",
+    "remarks": ""
+  },
+  {
+    "time": "7:43",
+    "destination": "京都",
+    "platform": "7",
+    "trainName": "普通",
+    "remarks": ""
+  },
+  {
+    "time": "7:47",
+    "destination": "米原・敦賀",
+    "platform": "9",
+    "trainName": "新快速",
+    "remarks": "敦賀行きは湖西線経由"
+  },
+  {
+    "time": "7:50",
+    "destination": "野洲",
+    "platform": "10",
+    "trainName": "快速",
+    "remarks": ""
+  },
+  {
+    "time": "7:52",
+    "destination": "高槻",
+    "platform": "7",
+    "trainName": "普通",
+    "remarks": ""
+  },
+  {
+    "time": "7:55",
+    "destination": "野洲",
+    "platform": "9",
+    "trainName": "新快速4号",
+    "remarks": "9号車は有料座席A-SEAT"
   }
 ]
