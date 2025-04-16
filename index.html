@@ -133,7 +133,7 @@
         function displayDepartures(referenceTime) {
             departuresDiv.innerHTML = '';
             let nowMinutes;
-            let nowForCalculation = new Date(); // 現在時刻を基準とした Date オブジェクト
+            let nowForCalculation = new Date();
 
             if (displayMode === 'realtime') {
                 nowMinutes = nowForCalculation.getHours() * 60 + nowForCalculation.getMinutes();
@@ -145,7 +145,7 @@
                 nowForCalculation.setSeconds(0);
                 nowForCalculation.setMilliseconds(0);
             } else {
-                nowMinutes = nowForCalculation.getHours() * 60 + nowForCalculation.getMinutes(); // デフォルトはリアルタイム
+                nowMinutes = nowForCalculation.getHours() * 60 + nowForCalculation.getMinutes();
             }
 
             const upcomingDepartures = allDepartures.filter(departure => {
@@ -208,8 +208,8 @@
                         <span class="platform">${departure.platform}番線</span>
                         <span class="trainName" style="display:none;">${departure.trainName}</span>
                         <span class="destination">${departure.destination}</span>
-                        <span class="remarks">${departure.remarks}</span>
-                        <span>${remainingTimeText}</span>
+                        <span class="remarks">${remainingTimeText}</span>
+                        <span>${departure.remarks}</span>
                     `;
                     departuresDiv.appendChild(item);
                 });
@@ -249,8 +249,8 @@
                                         <span class="platform">${nextDeparture.platform}番線</span>
                                         <span class="trainName" style="display:none;">${nextDeparture.trainName}</span>
                                         <span class="destination">${nextDeparture.destination}</span>
-                                        <span class="remarks">${nextDeparture.remarks}</span>
-                                        <span>${nextRemainingTimeText}</span>
+                                        <span class="remarks">${nextRemainingTimeText}</span>
+                                        <span>${nextDeparture.remarks}</span>
                                     `;
                                     departuresDiv.appendChild(newItem);
                                     displayedDepartures.push(nextDeparture);
