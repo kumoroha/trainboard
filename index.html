@@ -133,16 +133,19 @@
         function displayDepartures(referenceTime) {
             departuresDiv.innerHTML = '';
             let nowMinutes;
+            let nowForCalculation = new Date(); // 現在時刻を基準とした Date オブジェクト
 
             if (displayMode === 'realtime') {
-                const now = new Date();
-                nowMinutes = now.getHours() * 60 + now.getMinutes();
+                nowMinutes = nowForCalculation.getHours() * 60 + nowForCalculation.getMinutes();
             } else if (displayMode === 'specifiedTime' && referenceTime) {
                 const timeParts = referenceTime.split(':');
                 nowMinutes = parseInt(timeParts[0]) * 60 + parseInt(timeParts[1]);
+                nowForCalculation.setHours(parseInt(timeParts[0]));
+                nowForCalculation.setMinutes(parseInt(timeParts[1]));
+                nowForCalculation.setSeconds(0);
+                nowForCalculation.setMilliseconds(0);
             } else {
-                const now = new Date();
-                nowMinutes = now.getHours() * 60 + now.getMinutes(); // デフォルトはリアルタイム
+                nowMinutes = nowForCalculation.getHours() * 60 + nowForCalculation.getMinutes(); // デフォルトはリアルタイム
             }
 
             const upcomingDepartures = allDepartures.filter(departure => {
@@ -177,19 +180,24 @@
 
                     const departureTimeParts = departure.time.split(':');
                     const departureMinutes = parseInt(departureTimeParts[0]) * 60 + parseInt(departureTimeParts[1]);
-                    let remainingMinutes = departureMinutes - nowMinutes;
+                    let remainingMinutes;
                     let remainingTimeText = '';
 
-                    if (displayMode === 'realtime') {
-                        if (remainingMinutes > 0) {
-                            remainingTimeText = `あと ${remainingMinutes} 分`;
-                        } else if (remainingMinutes === 0) {
-                            remainingTimeText = 'まもなく発車';
-                        } else {
-                            remainingTimeText = '発車済';
-                        }
+                    const departureDate = new Date(nowForCalculation);
+                    departureDate.setHours(parseInt(departureTimeParts[0]));
+                    departureDate.setMinutes(parseInt(departureTimeParts[1]));
+                    departureDate.setSeconds(0);
+                    departureDate.setMilliseconds(0);
+
+                    const diffMilliseconds = departureDate.getTime() - nowForCalculation.getTime();
+                    remainingMinutes = Math.ceil(diffMilliseconds / (1000 * 60));
+
+                    if (remainingMinutes > 0) {
+                        remainingTimeText = `あと ${remainingMinutes} 分`;
+                    } else if (remainingMinutes === 0) {
+                        remainingTimeText = 'まもなく発車';
                     } else {
-                        remainingTimeText = '';
+                        remainingTimeText = '発車済';
                     }
 
                     const trainTypeClass = `train-type-${departure.trainName.replace(/\s+/g, '')}`;
@@ -277,6 +285,8 @@
                     setInterval(() => {
                         if (displayMode === 'realtime') {
                             displayDepartures();
+                        } else if (displayMode === 'specifiedTime' && specified時刻) {
+                            displayDepartures(specified時刻);
                         }
                     }, 60000);
                 })
