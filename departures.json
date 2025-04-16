@@ -250,5 +250,12 @@
     "platform": "7",
     "trainName": "普通",
     "remarks": ""
+  },
+  {
+    "time": "8:01",
+    "destination": "高槻",
+    "platform": "7",
+    "trainName": "普通",
+    "remarks": ""
   }
 ]
