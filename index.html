@@ -24,7 +24,7 @@
         }
         .board-header {
             display: grid;
-            grid-template-columns: 0.8fr 0.8fr 1fr 1fr 1fr 1fr;
+            grid-template-columns: 0.8fr 0.5fr 0.8fr 1fr 1fr 1fr; /* 種別表示の幅を調整 */
             gap: 10px;
             padding: 8px 0;
             border-bottom: 2px solid #fff;
@@ -39,7 +39,7 @@
         }
         .departure-item {
             display: grid;
-            grid-template-columns: 0.8fr 0.8fr 1fr 1fr 1fr 1fr;
+            grid-template-columns: 0.8fr 0.5fr 0.8fr 1fr 1fr 1fr; /* 種別表示の幅を調整 */
             gap: 10px;
             padding: 8px 0;
             border-bottom: 1px solid #333;
@@ -58,6 +58,20 @@
         .departure-item .time {
             font-weight: bold;
         }
+        /* 種別ごとの文字色 */
+        .train-type-普通 {
+            color: lightgreen;
+        }
+        .train-type-快速 {
+            color: yellow;
+        }
+        .train-type-特急 {
+            color: orange;
+        }
+        .train-type-急行 {
+            color: skyblue;
+        }
+        /* 必要に応じて他の種別のスタイルを追加 */
     </style>
 </head>
 <body>
@@ -65,6 +79,7 @@
         <div class="board-title">列車発車標</div>
         <div class="board-header">
             <span>時刻</span>
+            <span>種別</span>
             <span>番線</span>
             <span>列車名</span>
             <span>行き先</span>
@@ -131,8 +146,12 @@
                         remainingTimeText = '発車済';
                     }
 
+                    // 種別に応じてクラスを付与
+                    const trainTypeClass = `train-type-${departure.trainName.replace(/\s+/g, '')}`; // 空白を削除してクラス名にする
+
                     item.innerHTML = `
                         <span class="time">${departure.time}</span>
+                        <span class="${trainTypeClass}">${departure.trainName}</span>
                         <span class="platform">${departure.platform}番線</span>
                         <span class="trainName">${departure.trainName}</span>
                         <span class="destination">${departure.destination}</span>
@@ -169,8 +188,10 @@
                                     } else {
                                         nextRemainingTimeText = '発車済';
                                     }
+                                    const nextTrainTypeClass = `train-type-${nextDeparture.trainName.replace(/\s+/g, '')}`;
                                     newItem.innerHTML = `
                                         <span class="time">${nextDeparture.time}</span>
+                                        <span class="${nextTrainTypeClass}">${nextDeparture.trainName}</span>
                                         <span class="platform">${nextDeparture.platform}番線</span>
                                         <span class="trainName">${nextDeparture.trainName}</span>
                                         <span class="destination">${nextDeparture.destination}</span>
