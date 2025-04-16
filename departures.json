@@ -243,5 +243,12 @@
     "platform": "9",
     "trainName": "新快速4号",
     "remarks": "9号車は有料座席A-SEAT"
+  },
+  {
+    "time": "7:57",
+    "destination": "京都",
+    "platform": "7",
+    "trainName": "普通",
+    "remarks": ""
   }
 ]
