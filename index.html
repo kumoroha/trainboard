@@ -4,91 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>列車発車標</title>
-　　<style>
-    body {
-        font-family: sans-serif;
-        margin: 20px;
-        background-color: #f0f0f0;
-    }
-    .departure-board {
-        background-color: #000;
-        color: #fff;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
-    }
-    .board-title {
-        font-size: 1.5em;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-    .board-header {
-        display: grid;
-        /* デバイスによって列の幅を調整 */
-        grid-template-columns: minmax(50px, 0.8fr) minmax(40px, 0.5fr) minmax(60px, 0.8fr) minmax(100px, 1fr) minmax(100px, 1fr) minmax(70px, 1fr);
-        gap: 10px;
-        padding: 8px 0;
-        border-bottom: 2px solid #fff;
-        margin-bottom: 5px;
-    }
-    .board-header span {
-        text-align: left;
-        font-weight: bold;
-        display: inline-block; /* インラインブロック要素にする */
-    }
-    .departure-list {
-        overflow: hidden; /* スライドのアニメーションのために追加 */
-    }
-    .departure-item {
-        display: grid;
-        /* ヘッダーと同じ列の幅になるように調整 */
-        grid-template-columns: minmax(50px, 0.8fr) minmax(40px, 0.5fr) minmax(60px, 0.8fr) minmax(100px, 1fr) minmax(100px, 1fr) minmax(70px, 1fr);
-        gap: 10px;
-        padding: 8px 0;
-        border-bottom: 1px solid #333;
-        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; /* アニメーション用 */
-    }
-    .departure-item.departed {
-        opacity: 0;
-        transform: translateY(-100%);
-    }
-    .departure-item:last-child {
-        border-bottom: none;
-    }
-    .departure-item span {
-        text-align: left;
-        display: inline-block; /* こちらもインラインブロック要素にする */
-    }
-    .departure-item .time {
-        font-weight: bold;
-    }
-    /* 種別ごとの文字色 */
-    .train-type-普通 {
-        color: white;
-    }
-    .train-type-快速 {
-        color: orange;
-    }
-    .train-type-新快速 {
-        color: blue;
-    }
-    .train-type-特急 {
-        color: red;
-    }
-    /* 必要に応じて他の種別のスタイルを追加 */
-　　</style>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        .departure-board {
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        .board-title {
+            font-size: 1.5em;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .board-header {
+            display: grid;
+            grid-template-columns: minmax(50px, 0.8fr) minmax(40px, 0.5fr) minmax(60px, 0.8fr) minmax(100px, 1fr) minmax(100px, 1fr) minmax(70px, 1fr) minmax(70px, 1fr); /* 7列に変更 */
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 2px solid #fff;
+            margin-bottom: 5px;
+        }
+        .board-header span {
+            text-align: left;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .departure-list {
+            overflow: hidden; /* スライドのアニメーションのために追加 */
+        }
+        .departure-item {
+            display: grid;
+            grid-template-columns: minmax(50px, 0.8fr) minmax(40px, 0.5fr) minmax(60px, 0.8fr) minmax(100px, 1fr) minmax(100px, 1fr) minmax(70px, 1fr) minmax(70px, 1fr); /* 7列に変更 */
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; /* アニメーション用 */
+        }
+        .departure-item.departed {
+            opacity: 0;
+            transform: translateY(-100%);
+        }
+        .departure-item:last-child {
+            border-bottom: none;
+        }
+        .departure-item span {
+            text-align: left;
+            display: inline-block;
+        }
+        .departure-item .time {
+            font-weight: bold;
+        }
+        /* 種別ごとの文字色 */
+        .train-type-普通 {
+            color: white;
+        }
+        .train-type-快速 {
+            color: orange;
+        }
+        .train-type-新快速 {
+            color: blue;
+        }
+        .train-type-特急 {
+            color: red;
+        }
+        /* 必要に応じて他の種別のスタイルを追加 */
+    </style>
 </head>
 <body>
     <div class="departure-board">
         <div class="board-title">列車発車標</div>
         <div class="board-header">
-            <span>時刻</span>
-            <span>種別</span>
-            <span>番線</span>
-            <span>列車名</span>
-            <span>行き先</span>
-            <span>備考</span>
-            <span>発車まで</span>
+            <span style="grid-column: 1;">時刻</span>
+            <span style="grid-column: 2;">種別</span>
+            <span style="grid-column: 3;">番線</span>
+            <span style="grid-column: 4;">列車名</span>
+            <span style="grid-column: 5;">行き先</span>
+            <span style="grid-column: 6;">備考</span>
+            <span style="grid-column: 7;">発車まで</span>
         </div>
         <div id="departures" class="departure-list">
             </div>
@@ -151,13 +149,13 @@
                     }
 
                     // 種別に応じてクラスを付与
-                    const trainTypeClass = `train-type-${departure.trainName.replace(/\s+/g, '')}`; // 空白を削除してクラス名にする
+                    const trainTypeClass = `train-type-${departure.trainName.replace(/\s+/g, '')}`;
 
                     item.innerHTML = `
                         <span class="time">${departure.time}</span>
                         <span class="${trainTypeClass}">${departure.trainName}</span>
                         <span class="platform">${departure.platform}番線</span>
-                        <span class="trainName">${departure.trainName}</span>
+                        <span class="trainName" style="display:none;">${departure.trainName}</span>
                         <span class="destination">${departure.destination}</span>
                         <span class="remarks">${departure.remarks}</span>
                         <span>${remainingTimeText}</span>
@@ -197,7 +195,7 @@
                                         <span class="time">${nextDeparture.time}</span>
                                         <span class="${nextTrainTypeClass}">${nextDeparture.trainName}</span>
                                         <span class="platform">${nextDeparture.platform}番線</span>
-                                        <span class="trainName">${nextDeparture.trainName}</span>
+                                        <span class="trainName" style="display:none;">${nextDeparture.trainName}</span>
                                         <span class="destination">${nextDeparture.destination}</span>
                                         <span class="remarks">${nextDeparture.remarks}</span>
                                         <span>${nextRemainingTimeText}</span>
