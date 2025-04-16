@@ -4,75 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>列車発車標</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            margin: 20px;
-            background-color: #f0f0f0;
-        }
-        .departure-board {
-            background-color: #000;
-            color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
-        }
-        .board-title {
-            font-size: 1.5em;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .board-header {
-            display: grid;
-            grid-template-columns: 0.8fr 0.5fr 0.8fr 1fr 1fr 1fr; /* 種別表示の幅を調整 */
-            gap: 10px;
-            padding: 8px 0;
-            border-bottom: 2px solid #fff;
-            margin-bottom: 5px;
-        }
-        .board-header span {
-            text-align: left;
-            font-weight: bold;
-        }
-        .departure-list {
-            overflow: hidden; /* スライドのアニメーションのために追加 */
-        }
-        .departure-item {
-            display: grid;
-            grid-template-columns: 0.8fr 0.5fr 0.8fr 1fr 1fr 1fr; /* 種別表示の幅を調整 */
-            gap: 10px;
-            padding: 8px 0;
-            border-bottom: 1px solid #333;
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; /* アニメーション用 */
-        }
-        .departure-item.departed {
-            opacity: 0;
-            transform: translateY(-100%);
-        }
-        .departure-item:last-child {
-            border-bottom: none;
-        }
-        .departure-item span {
-            text-align: left;
-        }
-        .departure-item .time {
-            font-weight: bold;
-        }
-        /* 種別ごとの文字色 */
-        .train-type-普通 {
-            color: white;
-        }
-        .train-type-快速 {
-            color: orange;
-        }
-        .train-type-新快速 {
-            color: blue;
-        }
-        .train-type-特急 {
-            color: red;
-        }
-        /* 必要に応じて他の種別のスタイルを追加 */
-    </style>
+　　<style>
+    body {
+        font-family: sans-serif;
+        margin: 20px;
+        background-color: #f0f0f0;
+    }
+    .departure-board {
+        background-color: #000;
+        color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    }
+    .board-title {
+        font-size: 1.5em;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    .board-header {
+        display: grid;
+        /* デバイスによって列の幅を調整 */
+        grid-template-columns: minmax(50px, 0.8fr) minmax(40px, 0.5fr) minmax(60px, 0.8fr) minmax(100px, 1fr) minmax(100px, 1fr) minmax(70px, 1fr);
+        gap: 10px;
+        padding: 8px 0;
+        border-bottom: 2px solid #fff;
+        margin-bottom: 5px;
+    }
+    .board-header span {
+        text-align: left;
+        font-weight: bold;
+    }
+    .departure-list {
+        overflow: hidden; /* スライドのアニメーションのために追加 */
+    }
+    .departure-item {
+        display: grid;
+        /* ヘッダーと同じ列の幅になるように調整 */
+        grid-template-columns: minmax(50px, 0.8fr) minmax(40px, 0.5fr) minmax(60px, 0.8fr) minmax(100px, 1fr) minmax(100px, 1fr) minmax(70px, 1fr);
+        gap: 10px;
+        padding: 8px 0;
+        border-bottom: 1px solid #333;
+        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; /* アニメーション用 */
+    }
+    .departure-item.departed {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+    .departure-item:last-child {
+        border-bottom: none;
+    }
+    .departure-item span {
+        text-align: left;
+    }
+    .departure-item .time {
+        font-weight: bold;
+    }
+    /* 種別ごとの文字色 */
+    .train-type-普通 {
+        color: white;
+    }
+    .train-type-快速 {
+        color: orange;
+    }
+    .train-type-新快速 {
+        color: blue;
+    }
+    .train-type-特急 {
+        color: red;
+    }
+    /* 必要に応じて他の種別のスタイルを追加 */
+　　</style>
 </head>
 <body>
     <div class="departure-board">
