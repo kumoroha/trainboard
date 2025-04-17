@@ -22,7 +22,6 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
       ? specifiedTime 
       : `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
-    // 時刻比較関数
     const isTimeAfter = (trainTime, referenceTime) => {
       const [trainHour, trainMinute] = trainTime.split(":").map(Number);
       const [refHour, refMinute] = referenceTime.split(":").map(Number);
@@ -31,25 +30,20 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
       return false;
     };
 
-    // フィルタリングロジック
     let filteredTrains = trainData.filter(train => {
       const trainTime = train.time || "00:00";
       if (searchQuery) {
-        // 検索モード：行き先・種別・時間でフィルタリング
         return train.destination.includes(searchQuery) || 
                train.trainName.includes(searchQuery) ||
                trainTime.startsWith(searchQuery);
       }
-      // リアルタイム・時間指定では、現在時刻または指定時刻以降を表示
       return isTimeAfter(trainTime, currentTime);
     });
 
-    // リアルタイム・時間指定モードでは最大4行のみ表示
     if (!allRows) {
       filteredTrains = filteredTrains.slice(0, 4);
     }
 
-    // テーブルにデータを追加
     filteredTrains.forEach(train => {
       const row = document.createElement("tr");
       row.innerHTML = `
@@ -62,7 +56,16 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
       departureList.appendChild(row);
     });
 
-    // データがない場合のメッセージ
+    // お知らせを5行目に追加
+    const announcementRow = document.createElement("tr");
+    announcementRow.id = "announcement-row";
+    announcementRow.innerHTML = `
+      <td colspan="5" style="text-align: center; font-weight: bold; color: #e74c3c;">
+        ${announcements[announcementIndex]}
+      </td>
+    `;
+    departureList.appendChild(announcementRow);
+
     if (filteredTrains.length === 0) {
       const noDataRow = document.createElement("tr");
       noDataRow.innerHTML = `
@@ -81,13 +84,17 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
   }
 }
 
-// お知らせを横スクロール
-function startAnnouncementScroll() {
-  const announcementText = document.getElementById("announcement-text");
-  setInterval(() => {
-    announcementIndex = (announcementIndex + 1) % announcements.length;
-    announcementText.textContent = announcements[announcementIndex];
-  }, 5000); // 5秒ごとに次のお知らせを表示
+// お知らせを更新
+function updateAnnouncement() {
+  announcementIndex = (announcementIndex + 1) % announcements.length;
+  const announcementRow = document.getElementById("announcement-row");
+  if (announcementRow) {
+    announcementRow.innerHTML = `
+      <td colspan="5" style="text-align: center; font-weight: bold; color: #e74c3c;">
+        ${announcements[announcementIndex]}
+      </td>
+    `;
+  }
 }
 
 // モード切り替え
@@ -96,38 +103,33 @@ function handleModeChange() {
   const specifiedRadio = document.getElementById("specified-mode");
   const searchRadio = document.getElementById("search-mode");
 
-  // モードに応じて入力フィールドを表示/非表示
   document.getElementById("time-input-container").classList.toggle("hidden", !specifiedRadio.checked);
   document.getElementById("search-input-container").classList.toggle("hidden", !searchRadio.checked);
 
-  // リアルタイム更新の停止
   clearInterval(intervalId);
 
   if (realtimeRadio.checked) {
-    loadDepartures(); // 初期ロード
+    loadDepartures();
     intervalId = setInterval(() => loadDepartures(), 60000); // 毎分更新
   } else if (specifiedRadio.checked) {
     const timeInput = document.getElementById("time-input");
     timeInput.addEventListener("change", () => loadDepartures(timeInput.value));
-    loadDepartures(timeInput.value); // 初期ロード
+    loadDepartures(timeInput.value);
   } else if (searchRadio.checked) {
     const searchInput = document.getElementById("search-input");
     const searchButton = document.getElementById("search-button");
     searchButton.addEventListener("click", () => loadDepartures(null, true, searchInput.value));
-    loadDepartures(null, true); // 検索モードでは初期表示ですべての行を表示
+    loadDepartures(null, true);
   }
 }
 
 // 初期処理
 document.addEventListener("DOMContentLoaded", () => {
-  // モード切り替えイベントの設定
   document.querySelectorAll("input[name='mode']").forEach(radio => {
     radio.addEventListener("change", handleModeChange);
   });
 
-  // 初期モード設定
   handleModeChange();
 
-  // お知らせのスクロールを開始
-  startAnnouncementScroll();
+  setInterval(updateAnnouncement, 5000); // 5秒ごとにお知らせを更新
 });
