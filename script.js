@@ -26,7 +26,7 @@ async function loadDepartures(specifiedTime = null) {
 
     // 時刻フォーマットを標準化する関数
     const normalizeTime = (time) => {
-      if (!time) return null; // 欠損時はnullを返す
+      if (!time || time.trim() === "") return null; // 空欄ならnullを返す
       const [hour, minute] = time.split(":").map(num => parseInt(num, 10));
       return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
     };
@@ -55,25 +55,25 @@ async function loadDepartures(specifiedTime = null) {
       return;
     }
 
-    // データを順番通りに表示（null対応）
+    // データを順番通りに表示
     upcomingTrains.forEach(train => {
       const time = normalizeTime(train.time);
-      const destination = train.destination !== undefined ? train.destination : null;
-      const trainName = train.trainName !== undefined ? train.trainName : null;
-      const platform = train.platform !== undefined ? train.platform : null;
-      const remarks = train.remarks !== undefined && train.remarks !== "" ? train.remarks : null; // 備考が空の場合もnull
+      const destination = train.destination !== undefined ? train.destination : "行き先未設定";
+      const trainName = train.trainName !== undefined ? train.trainName : "種別未設定";
+      const platform = train.platform !== undefined ? train.platform : "番線未設定";
+      const remarks = train.remarks !== undefined ? train.remarks : ""; // 備考は空欄のまま
 
       console.log(`表示中: 時刻=${time}, 行き先=${destination}, 種別=${trainName}, 番線=${platform}, 備考=${remarks}`);
 
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${time !== null ? time : "null"}</td>
-        <td>${destination !== null ? destination : "null"}</td>
+        <td>${destination}</td>
         <td class="train-type-${trainName === '快速' ? 'rapid' : trainName === '新快速' ? 'new-rapid' : ''}">
-          ${trainName !== null ? trainName : "null"}
+          ${trainName}
         </td>
-        <td>${platform !== null ? platform : "null"}</td>
-        <td class="remarks">${remarks !== null ? remarks : "null"}</td>
+        <td>${platform}</td>
+        <td class="remarks">${remarks}</td>
       `;
       departureList.appendChild(row);
     });
