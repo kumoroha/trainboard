@@ -1,6 +1,8 @@
 // JSONデータのURL
 const apiURL = "./departures.json";
 
+let intervalId = null; // 毎分更新のためのInterval ID
+
 // 発車標データを取得して表示
 async function loadDepartures(specifiedTime = null) {
   try {
@@ -99,15 +101,36 @@ function setSpecifiedTime() {
   }
 }
 
+// ラジオボタンの切り替えでリアルタイム・時間指定を制御
+function handleModeChange() {
+  const realtimeRadio = document.getElementById("realtime-mode");
+  const specifiedRadio = document.getElementById("specified-mode");
+
+  if (realtimeRadio.checked) {
+    console.log("リアルタイムモードを有効化します...");
+    // リアルタイム更新を開始
+    loadDepartures(); // 初回ロード
+    intervalId = setInterval(() => {
+      loadDepartures();
+    }, 60000); // 毎分更新
+    document.getElementById("time-input-container").style.display = "none"; // 時間指定入力を非表示
+  } else if (specifiedRadio.checked) {
+    console.log("時間指定モードを有効化します...");
+    // リアルタイム更新を停止
+    clearInterval(intervalId);
+    intervalId = null;
+    document.getElementById("time-input-container").style.display = "block"; // 時間指定入力を表示
+  }
+}
+
 // イベントリスナーを追加
 document.addEventListener("DOMContentLoaded", () => {
   const timeButton = document.getElementById("time-button");
+  const modeRadios = document.querySelectorAll("input[name='mode']");
   timeButton.addEventListener("click", setSpecifiedTime);
-  loadDepartures(); // 初期ロード（現在時刻）
-});
+  modeRadios.forEach(radio => radio.addEventListener("change", handleModeChange));
 
-// 一定間隔で発車標を更新（リアルタイム表示）
-setInterval(() => {
-  console.log("リアルタイムで発車標を更新します...");
-  loadDepartures();
-}, 60000); // 毎分更新
+  // 初期状態をリアルタイムモードに設定
+  document.getElementById("realtime-mode").checked = true;
+  handleModeChange();
+});
