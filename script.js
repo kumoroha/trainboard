@@ -4,12 +4,15 @@ const apiURL = "./departures.json";
 // 発車標データを取得して表示
 async function loadDepartures(specifiedTime = null) {
   try {
+    console.log("データ取得を開始します...");
     const response = await fetch(apiURL);
     if (!response.ok) {
       throw new Error(`HTTPエラー: ${response.status}`);
     }
 
     const trainData = await response.json();
+    console.log("取得した列車データ:", trainData);
+
     const departureList = document.getElementById("departure-list");
     departureList.innerHTML = ""; // 初期化
 
@@ -19,18 +22,31 @@ async function loadDepartures(specifiedTime = null) {
       ? specifiedTime 
       : `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
-    console.log(`現在の基準時刻: ${currentTime}`);
+    console.log(`基準時刻: ${currentTime}`);
 
-    // 柔軟にフィルタリング処理を実装
+    // 時刻フォーマットを標準化する関数
+    const normalizeTime = (time) => {
+      if (!time) return null; // 欠損時はnullを返す
+      const [hour, minute] = time.split(":").map(num => parseInt(num, 10));
+      return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+    };
+
+    // データのフィルタリング
     const upcomingTrains = trainData.filter(train => {
-      const time = train.time || "00:00"; // デフォルト値
-      return time >= currentTime;
-    }).sort((a, b) => (a.time || "00:00").localeCompare(b.time || "00:00"));
+      const trainTime = normalizeTime(train.time); // 時刻を標準化
+      console.log(`時刻フィルタリング中: trainTime=${trainTime} >= currentTime=${currentTime}`);
+      return trainTime && trainTime >= currentTime;
+    }).sort((a, b) => {
+      const timeA = normalizeTime(a.time);
+      const timeB = normalizeTime(b.time);
+      return (timeA || "").localeCompare(timeB || "");
+    });
 
-    console.log("絞り込まれた列車データ:", upcomingTrains);
+    console.log("フィルタリング後の列車データ:", upcomingTrains);
 
     // 今日の電車がない場合の処理
     if (upcomingTrains.length === 0) {
+      console.warn("本日の電車はもうありません");
       const noTrainsRow = document.createElement("tr");
       noTrainsRow.innerHTML = `
         <td colspan="5" style="text-align: center; color: #ff0000;">本日の電車はもうありません</td>
@@ -39,23 +55,25 @@ async function loadDepartures(specifiedTime = null) {
       return;
     }
 
-    // データを順番通りに表示（柔軟にフィールドに対応）
+    // データを順番通りに表示（null対応）
     upcomingTrains.forEach(train => {
-      const time = train.time || "時間未設定";
-      const destination = train.destination || "行き先未設定";
-      const trainName = train.trainName || "種別未設定";
-      const platform = train.platform || "番線未設定";
-      const remarks = train.remarks || ""; // 備考がない場合は空欄
+      const time = normalizeTime(train.time);
+      const destination = train.destination !== undefined ? train.destination : null;
+      const trainName = train.trainName !== undefined ? train.trainName : null;
+      const platform = train.platform !== undefined ? train.platform : null;
+      const remarks = train.remarks !== undefined && train.remarks !== "" ? train.remarks : null; // 備考が空の場合もnull
+
+      console.log(`表示中: 時刻=${time}, 行き先=${destination}, 種別=${trainName}, 番線=${platform}, 備考=${remarks}`);
 
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td>${time}</td>
-        <td>${destination}</td>
+        <td>${time !== null ? time : "null"}</td>
+        <td>${destination !== null ? destination : "null"}</td>
         <td class="train-type-${trainName === '快速' ? 'rapid' : trainName === '新快速' ? 'new-rapid' : ''}">
-          ${trainName}
+          ${trainName !== null ? trainName : "null"}
         </td>
-        <td>${platform}</td>
-        <td class="remarks">${remarks}</td>
+        <td>${platform !== null ? platform : "null"}</td>
+        <td class="remarks">${remarks !== null ? remarks : "null"}</td>
       `;
       departureList.appendChild(row);
     });
@@ -75,8 +93,8 @@ async function loadDepartures(specifiedTime = null) {
 // 時間を指定して表示する機能
 function setSpecifiedTime() {
   const timeInput = document.getElementById("time-input").value;
+  console.log(`指定された時刻: ${timeInput}`);
   if (timeInput) {
-    console.log(`指定された時刻: ${timeInput}`);
     loadDepartures(timeInput);
   }
 }
@@ -89,4 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // 一定間隔で発車標を更新（リアルタイム表示）
-setInterval(() => loadDepartures(), 60000); // 毎分更新
+setInterval(() => {
+  console.log("リアルタイムで発車標を更新します...");
+  loadDepartures();
+}, 60000); // 毎分更新
