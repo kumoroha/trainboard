@@ -41,7 +41,7 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
       filteredTrains = filteredTrains.slice(0, 4);
     }
 
-    // データをテーブルに追加
+    // テーブルにデータを追加
     filteredTrains.forEach(train => {
       const row = document.createElement("tr");
       row.innerHTML = `
@@ -101,6 +101,7 @@ function handleModeChange() {
   } else if (specifiedRadio.checked) {
     const timeInput = document.getElementById("time-input");
     timeInput.addEventListener("change", () => loadDepartures(timeInput.value));
+    loadDepartures(timeInput.value); // 初期ロード
   } else if (searchRadio.checked) {
     const searchInput = document.getElementById("search-input");
     const searchButton = document.getElementById("search-button");
