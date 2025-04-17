@@ -94,13 +94,20 @@ tr:hover {
   color: #e74c3c;
   height: 40px;
   overflow: hidden;
+  position: relative;
 }
 
 #announcement-text {
-  animation: scroll 5s linear infinite;
+  position: absolute;
+  white-space: nowrap;
+  animation: scroll-horizontal 10s linear infinite;
 }
 
-@keyframes scroll {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-100%); }
+@keyframes scroll-horizontal {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
 }
