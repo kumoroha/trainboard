@@ -3,34 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>列車発車標</title>
-  <link rel="stylesheet" href="style.css">
+  <title>発車標</title>
+  <script src="script.js" defer></script>
 </head>
 <body>
-  <div class="departure-board">
-    <div class="header">
-      列車発車標
-      <div class="time-selector">
-        <label for="time-input">時刻を指定:</label>
-        <input type="time" id="time-input">
-        <button id="time-button">表示</button>
-      </div>
-    </div>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>時刻</th>
-          <th>行き先</th>
-          <th>種別</th>
-          <th>番線</th>
-          <th>備考</th>
-        </tr>
-      </thead>
-      <tbody id="departure-list">
-        <!-- 列車情報がここに追加されます -->
-      </tbody>
-    </table>
+  <h1>発車標</h1>
+  
+  <div>
+    <label><input type="radio" id="realtime-mode" name="mode" value="realtime"> リアルタイム</label>
+    <label><input type="radio" id="specified-mode" name="mode" value="specified"> 時間指定</label>
   </div>
-  <script src="script.js"></script>
+  
+  <div id="time-input-container" style="display: none;">
+    <input type="time" id="time-input">
+    <button id="time-button">時間を設定</button>
+  </div>
+  
+  <table border="1">
+    <thead>
+      <tr>
+        <th>時刻</th>
+        <th>行き先</th>
+        <th>種別</th>
+        <th>番線</th>
+        <th>備考</th>
+      </tr>
+    </thead>
+    <tbody id="departure-list">
+      <!-- データがここに表示されます -->
+    </tbody>
+  </table>
 </body>
 </html>
