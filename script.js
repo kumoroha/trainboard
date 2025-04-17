@@ -17,23 +17,23 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
     const departureList = document.getElementById("departure-list");
     departureList.innerHTML = ""; // 初期化
 
+    // 現在時刻の取得または指定時刻を基準とする
     const now = new Date();
     const currentTime = specifiedTime 
       ? specifiedTime 
       : `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
-    // 検索条件に応じたフィルタリング
+    // リアルタイム・時間指定・検索モードのフィルタリング
     let filteredTrains = trainData.filter(train => {
       const trainTime = train.time || "00:00";
+      // 検索クエリがある場合は、行き先・種別・時間でフィルタリング
       if (searchQuery) {
-        // 検索モード：行き先・種別・時間でフィルタリング
         return train.destination.includes(searchQuery) || 
                train.trainName.includes(searchQuery) ||
                trainTime.startsWith(searchQuery);
-      } else {
-        // リアルタイムおよび時間指定モード：現在時刻以降の列車を表示
-        return trainTime >= currentTime;
       }
+      // リアルタイム・時間指定では、現在時刻または指定時刻以降を表示
+      return trainTime >= currentTime;
     });
 
     // リアルタイム・時間指定モードでは最大4行のみ表示
@@ -41,7 +41,7 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
       filteredTrains = filteredTrains.slice(0, 4);
     }
 
-    // テーブルにデータを追加
+    // データをテーブルに追加
     filteredTrains.forEach(train => {
       const row = document.createElement("tr");
       row.innerHTML = `
