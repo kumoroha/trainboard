@@ -49,13 +49,13 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
   }
 }
 
-// お知らせを自動スクロール
+// お知らせを横スクロール
 function startAnnouncementScroll() {
   const announcementText = document.getElementById("announcement-text");
   setInterval(() => {
     announcementIndex = (announcementIndex + 1) % announcements.length;
     announcementText.textContent = announcements[announcementIndex];
-  }, 5000);
+  }, 5000); // 5秒ごとに次のお知らせを表示
 }
 
 // モード切り替え
