@@ -10,6 +10,7 @@ async function loadDepartures() {
     const departureList = document.getElementById("departure-list");
     departureList.innerHTML = ""; // 初期化
 
+    // データを順番通りに表示
     trainData.forEach(train => {
       const row = document.createElement("tr");
       row.innerHTML = `
