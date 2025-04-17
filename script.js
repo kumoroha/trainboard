@@ -19,6 +19,16 @@ async function loadDepartures() {
       .filter(train => train.time >= currentTime) // 現在時刻以降の列車をフィルタ
       .sort((a, b) => a.time.localeCompare(b.time)); // 時刻順にソート
 
+    // 今日の電車がない場合の処理
+    if (upcomingTrains.length === 0) {
+      const noTrainsRow = document.createElement("tr");
+      noTrainsRow.innerHTML = `
+        <td colspan="5" style="text-align: center; color: #ff0000;">本日の電車はもうありません</td>
+      `;
+      departureList.appendChild(noTrainsRow);
+      return;
+    }
+
     // データを順番通りに表示
     upcomingTrains.forEach(train => {
       const row = document.createElement("tr");
