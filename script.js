@@ -22,17 +22,26 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
       ? specifiedTime 
       : `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
+    // 検索条件に応じたフィルタリング
     let filteredTrains = trainData.filter(train => {
-      const time = train.time || "00:00";
-      return searchQuery 
-        ? train.destination.includes(searchQuery) || train.trainName.includes(searchQuery)
-        : time >= currentTime;
+      const trainTime = train.time || "00:00";
+      if (searchQuery) {
+        // 検索モード：行き先・種別・時間でフィルタリング
+        return train.destination.includes(searchQuery) || 
+               train.trainName.includes(searchQuery) ||
+               trainTime.startsWith(searchQuery);
+      } else {
+        // リアルタイムおよび時間指定モード：現在時刻以降の列車を表示
+        return trainTime >= currentTime;
+      }
     });
 
+    // リアルタイム・時間指定モードでは最大4行のみ表示
     if (!allRows) {
-      filteredTrains = filteredTrains.slice(0, 4); // 上位4件のみを表示
+      filteredTrains = filteredTrains.slice(0, 4);
     }
 
+    // テーブルにデータを追加
     filteredTrains.forEach(train => {
       const row = document.createElement("tr");
       row.innerHTML = `
@@ -44,8 +53,23 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
       `;
       departureList.appendChild(row);
     });
+
+    // データがない場合のメッセージ
+    if (filteredTrains.length === 0) {
+      const noDataRow = document.createElement("tr");
+      noDataRow.innerHTML = `
+        <td colspan="5" style="text-align: center; color: red;">該当する列車はありません</td>
+      `;
+      departureList.appendChild(noDataRow);
+    }
   } catch (error) {
     console.error("データの取得に失敗しました:", error);
+    const departureList = document.getElementById("departure-list");
+    departureList.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align: center; color: red;">データの取得に失敗しました</td>
+      </tr>
+    `;
   }
 }
 
@@ -81,6 +105,7 @@ function handleModeChange() {
     const searchInput = document.getElementById("search-input");
     const searchButton = document.getElementById("search-button");
     searchButton.addEventListener("click", () => loadDepartures(null, true, searchInput.value));
+    loadDepartures(null, true); // 検索モードでは初期表示ですべての行を表示
   }
 }
 
