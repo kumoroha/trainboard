@@ -1,76 +1,69 @@
-/* 全体のスタイル調整 */
+/* ベーススタイル */
 body {
-  font-family: 'Arial', sans-serif;
-  background-color: #335577; /* 少し明るい青系の背景色 */
-  color: #0f0; /* テキスト色を緑に設定 */
-  margin: 0;
+  font-family: Arial, sans-serif;
+  margin: 20px;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100vh;
-  overflow: hidden; /* 全体のスクロールを防止 */
+  background-color: #f9f9f9;
+  color: #333;
 }
 
-/* 発車標全体をスクロール可能に */
-.departure-board {
-  width: 80%;
-  max-width: 800px;
-  border: 3px solid #0f0; /* 緑の枠線 */
-  padding: 10px;
-  background-color: #000; /* 発車標の背景色を黒に設定 */
-  overflow-y: auto; /* 発車標の内容をスクロール可能に */
-  height: 100%; /* 表示エリア全体を使用 */
-  box-sizing: border-box; /* パディングを含めたサイズ計算 */
-}
-
-/* ヘッダーの固定 */
-.header {
+h1 {
   text-align: center;
-  font-size: 24px;
-  margin-bottom: 10px;
-  position: sticky; /* ヘッダーを固定 */
-  top: 0;
-  background-color: #000; /* ヘッダーの背景色を黒に設定 */
-  color: #fff; /* 白字で見やすく */
-  z-index: 10;
+  color: #0056b3;
 }
 
-/* 表のデザイン */
-.table {
+div {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+label {
+  margin-right: 15px;
+  font-size: 16px;
+}
+
+#time-input-container {
+  margin-top: 10px;
+}
+
+/* テーブルスタイル */
+table {
   width: 100%;
   border-collapse: collapse;
+  margin: 0 auto;
+  background-color: #fff;
 }
 
-.table th, .table td {
-  border: 1px solid #0f0; /* 緑の枠線 */
-  padding: 10px;
-  text-align: left;
+th, td {
+  border: 1px solid #ddd;
+  text-align: center;
+  padding: 8px;
 }
 
-/* ヘッダーのセル */
-.table th {
-  background-color: #222; /* 少し明るい黒で強調 */
-  color: #fff; /* 白字で見やすく */
+th {
+  background-color: #f4f4f4;
+  font-weight: bold;
 }
 
-/* データのセル */
-.table td {
-  background-color: #111; /* 黒に近い背景色 */
-  color: #0f0; /* 緑字で高コントラスト */
+tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
 
-/* 特定の種別（快速、新快速など）に色を付ける */
-.table td.train-type-rapid {
-  color: #ff8c00; /* オレンジ色 */
+tr:hover {
+  background-color: #f1f1f1;
 }
 
-.table td.train-type-new-rapid {
-  color: #00ffff; /* 水色 */
+.train-type-rapid {
+  color: #e74c3c;
+  font-weight: bold;
 }
 
-/* 備考欄のテキストを目立たせる */
-.table td.remarks {
+.train-type-new-rapid {
+  color: #3498db;
+  font-weight: bold;
+}
+
+.remarks {
   font-style: italic;
-  color: #ffa500; /* 薄いオレンジで目立たせる */
+  color: #555;
 }
