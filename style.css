@@ -1,7 +1,7 @@
 /* 全体のスタイル調整 */
 body {
   font-family: 'Arial', sans-serif;
-  background-color: #000; /* 背景色を黒に設定 */
+  background-color: #002b36; /* 暗い青系の背景色 (Solarizedテーマに基づく) */
   color: #0f0; /* テキスト色を緑に設定 */
   margin: 0;
   padding: 0;
@@ -18,7 +18,7 @@ body {
   max-width: 800px;
   border: 3px solid #0f0; /* 緑の枠線 */
   padding: 10px;
-  background-color: #000; /* 背景色を黒に設定 */
+  background-color: #000; /* 発車標の背景色を黒に設定 */
   overflow-y: auto; /* 発車標の内容をスクロール可能に */
   height: 100%; /* 表示エリア全体を使用 */
   box-sizing: border-box; /* パディングを含めたサイズ計算 */
@@ -31,8 +31,8 @@ body {
   margin-bottom: 10px;
   position: sticky; /* ヘッダーを固定 */
   top: 0;
-  background-color: #000; /* 背景色を黒に設定して重なりを防止 */
-  color: #fff; /* ヘッダーは白字で見やすく */
+  background-color: #000; /* ヘッダーの背景色を黒に設定 */
+  color: #fff; /* 白字で見やすく */
   z-index: 10;
 }
 
