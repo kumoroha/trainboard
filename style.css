@@ -1,8 +1,8 @@
 /* 全体のスタイル調整 */
 body {
   font-family: 'Arial', sans-serif;
-  background-color: #000;
-  color: #0f0;
+  background-color: #000; /* 背景色を黒に設定 */
+  color: #0f0; /* テキスト色を緑に設定 */
   margin: 0;
   padding: 0;
   display: flex;
@@ -16,9 +16,9 @@ body {
 .departure-board {
   width: 80%;
   max-width: 800px;
-  border: 3px solid #0f0;
+  border: 3px solid #0f0; /* 緑の枠線 */
   padding: 10px;
-  background-color: #000;
+  background-color: #000; /* 背景色を黒に設定 */
   overflow-y: auto; /* 発車標の内容をスクロール可能に */
   height: 100%; /* 表示エリア全体を使用 */
   box-sizing: border-box; /* パディングを含めたサイズ計算 */
@@ -31,7 +31,8 @@ body {
   margin-bottom: 10px;
   position: sticky; /* ヘッダーを固定 */
   top: 0;
-  background-color: #000; /* 背景色を設定して重なりを防止 */
+  background-color: #000; /* 背景色を黒に設定して重なりを防止 */
+  color: #fff; /* ヘッダーは白字で見やすく */
   z-index: 10;
 }
 
@@ -42,15 +43,34 @@ body {
 }
 
 .table th, .table td {
-  border: 1px solid #0f0;
+  border: 1px solid #0f0; /* 緑の枠線 */
   padding: 10px;
   text-align: left;
 }
 
+/* ヘッダーのセル */
 .table th {
-  background-color: #0a0;
+  background-color: #222; /* 少し明るい黒で強調 */
+  color: #fff; /* 白字で見やすく */
 }
 
+/* データのセル */
 .table td {
-  background-color: #020;
+  background-color: #111; /* 黒に近い背景色 */
+  color: #0f0; /* 緑字で高コントラスト */
+}
+
+/* 特定の種別（快速、新快速など）に色を付ける */
+.table td.train-type-rapid {
+  color: #ff8c00; /* オレンジ色 */
+}
+
+.table td.train-type-new-rapid {
+  color: #00ffff; /* 水色 */
+}
+
+/* 備考欄のテキストを目立たせる */
+.table td.remarks {
+  font-style: italic;
+  color: #ffa500; /* 薄いオレンジで目立たせる */
 }
