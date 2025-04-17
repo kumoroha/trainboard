@@ -41,3 +41,13 @@ body {
 .table td {
   background-color: #020;
 }
+
+body {
+  overflow-y: auto; /* 縦スクロールを有効化 */
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  max-height: none; /* 高さ制限を解除 */
+}
