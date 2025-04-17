@@ -1,38 +1,25 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>列車発車標</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>時間設定ダイアログ</title>
 </head>
 <body>
-    <div>
-        <input type="radio" id="realtime" name="displayMode" value="realtime" checked>
-        <label for="realtime">リアルタイム</label>
+  <form>
+    <label>
+      <input type="radio" name="timeSetting" id="enableTimeDialog" value="enable"> 時間設定を有効にする
+    </label>
+    <label>
+      <input type="radio" name="timeSetting" id="disableTimeDialog" value="disable"> 時間設定を無効にする
+    </label>
+  </form>
 
-        <input type="radio" id="specifiedTime" name="displayMode" value="specifiedTime">
-        <label for="specifiedTime">時間指定</label>
+  <div id="timeDialog" style="display: none; margin-top: 20px;">
+    <label for="timeInput">時間を設定してください:</label>
+    <input type="time" id="timeInput">
+  </div>
 
-        <input type="time" id="specifiedTimeInput" disabled>
-        <button id="applyTime">適用</button>
-    </div>
-
-    <div class="departure-board">
-        <div class="board-title">列車発車標</div>
-        <div class="board-header">
-            <span>時刻</span>
-            <span>種別</span>
-            <span>番線</span>
-            <span>列車名</span>
-            <span>行き先</span>
-            <span>備考</span>
-            <span>発車まで</span>
-        </div>
-        <div id="departures" class="departure-list">
-            </div>
-    </div>
-
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
