@@ -45,7 +45,7 @@ async function loadDepartures(specifiedTime = null) {
       const destination = train.destination || "行き先未設定";
       const trainName = train.trainName || "種別未設定";
       const platform = train.platform || "番線未設定";
-      const remarks = train.remarks || "備考なし";
+      const remarks = train.remarks || ""; // 備考がない場合は空欄
 
       const row = document.createElement("tr");
       row.innerHTML = `
