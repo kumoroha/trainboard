@@ -1,0 +1,97 @@
+body {
+    font-family: sans-serif;
+    margin: 20px;
+    background-color: #f0f0f0;
+}
+
+.departure-board {
+    background-color: #000;
+    color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.board-title {
+    font-size: 1.5em;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.board-header {
+    display: grid;
+    grid-template-columns: minmax(50px, 0.8fr) minmax(40px, 0.5fr) minmax(60px, 0.8fr) minmax(100px, 1fr) minmax(100px, 1fr) minmax(70px, 1fr) minmax(70px, 1fr);
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 2px solid #fff;
+    margin-bottom: 5px;
+}
+
+.board-header span {
+    text-align: left;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.departure-list {
+    overflow: hidden;
+}
+
+.departure-item {
+    display: grid;
+    grid-template-columns: minmax(50px, 0.8fr) minmax(40px, 0.5fr) minmax(60px, 0.8fr) minmax(100px, 1fr) minmax(100px, 1fr) minmax(70px, 1fr) minmax(70px, 1fr);
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #333;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.departure-item.departed {
+    opacity: 0;
+    transform: translateY(-100%);
+}
+
+.departure-item:last-child {
+    border-bottom: none;
+}
+
+.departure-item span {
+    text-align: left;
+    display: inline-block;
+}
+
+.departure-item .time {
+    font-weight: bold;
+}
+
+.train-type-普通 {
+    color: white;
+}
+
+.train-type-快速 {
+    color: orange;
+}
+
+.train-type-新快速 {
+    color: blue;
+}
+
+.train-type-特急 {
+    color: red;
+}
+
+div > input[type="radio"] {
+    margin-right: 5px;
+}
+
+div > label {
+    margin-right: 15px;
+}
+
+div > input[type="time"] {
+    margin-left: 10px;
+}
+
+div > button {
+    margin-left: 10px;
+}
