@@ -8,31 +8,58 @@
   <script src="script.js" defer></script>
 </head>
 <body>
-  <h1>発車標</h1>
+  <header>
+    <h1>発車標</h1>
+  </header>
   
-  <div>
-    <label><input type="radio" id="realtime-mode" name="mode" value="realtime"> リアルタイム</label>
-    <label><input type="radio" id="specified-mode" name="mode" value="specified"> 時間指定</label>
-  </div>
-  
-  <div id="time-input-container" style="display: none;">
-    <input type="time" id="time-input">
-    <button id="time-button">時間を設定</button>
-  </div>
-  
-  <table border="1">
-    <thead>
-      <tr>
-        <th>時刻</th>
-        <th>行き先</th>
-        <th>種別</th>
-        <th>番線</th>
-        <th>備考</th>
-      </tr>
-    </thead>
-    <tbody id="departure-list">
-      <!-- データがここに表示されます -->
-    </tbody>
-  </table>
+  <main>
+    <!-- モード選択 -->
+    <section class="mode-selection">
+      <label>
+        <input type="radio" id="realtime-mode" name="mode" value="realtime" checked> リアルタイム
+      </label>
+      <label>
+        <input type="radio" id="specified-mode" name="mode" value="specified"> 時間指定
+      </label>
+      <label>
+        <input type="radio" id="search-mode" name="mode" value="search"> 検索
+      </label>
+    </section>
+    
+    <!-- 時間指定入力 -->
+    <section id="time-input-container" class="hidden">
+      <input type="time" id="time-input">
+      <button id="time-button">時間を設定</button>
+    </section>
+    
+    <!-- 検索入力 -->
+    <section id="search-input-container" class="hidden">
+      <input type="text" id="search-input" placeholder="行き先・種別などを入力">
+      <button id="search-button">検索</button>
+    </section>
+    
+    <!-- 発車標テーブル -->
+    <section class="departure-table">
+      <table>
+        <thead>
+          <tr>
+            <th>時刻</th>
+            <th>行き先</th>
+            <th>種別</th>
+            <th>番線</th>
+            <th>備考</th>
+          </tr>
+        </thead>
+        <tbody id="departure-list">
+          <!-- データがここに表示されます -->
+        </tbody>
+      </table>
+    </section>
+    
+    <!-- お知らせセクション -->
+    <section id="announcement-container">
+      <p id="announcement-text">お知らせがここに表示されます。</p>
+    </section>
+  </main>
 </body>
 </html>
