@@ -4,7 +4,7 @@ const apiURL = "./departures.json";
 let intervalId = null; // リアルタイム更新用
 
 // 発車標データを取得して表示
-async function loadDepartures(specifiedTime = null, allRows = false, searchQuery = "") {
+async function loadDepartures(specifiedTime = null, allRows = false, searchQuery = "", showMessage = false) {
   try {
     const response = await fetch(apiURL);
     if (!response.ok) {
@@ -14,6 +14,16 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
     const trainData = await response.json();
     const departureList = document.getElementById("departure-list");
     departureList.innerHTML = ""; // リストを初期化
+
+    // 検索バーにメッセージを表示する場合
+    if (showMessage) {
+      const messageRow = document.createElement("tr");
+      messageRow.innerHTML = `
+        <td colspan="5" style="text-align: center; color: gray;">検索バーにキーワードを入力してください</td>
+      `;
+      departureList.appendChild(messageRow);
+      return; // メッセージだけ表示して処理を終了
+    }
 
     const now = new Date();
     const currentTime = specifiedTime 
@@ -79,6 +89,7 @@ function handleModeChange() {
   const realtimeRadio = document.getElementById("realtime-mode");
   const specifiedRadio = document.getElementById("specified-mode");
   const searchRadio = document.getElementById("search-mode");
+  const timetableRadio = document.getElementById("timetable-mode");
 
   // モードに応じて入力フィールドを表示・非表示
   document.getElementById("time-input-container").classList.toggle("hidden", !specifiedRadio.checked);
@@ -96,16 +107,39 @@ function handleModeChange() {
     timeInput.addEventListener("change", () => loadDepartures(timeInput.value));
     loadDepartures(timeInput.value);
   } else if (searchRadio.checked) {
-    // 検索モードでは全行を初期表示
-    loadDepartures(null, true);
+    // 検索モード
     const searchInput = document.getElementById("search-input");
     const searchButton = document.getElementById("search-button");
-    searchButton.addEventListener("click", () => loadDepartures(null, true, searchInput.value));
+
+    // 初回はメッセージを表示
+    loadDepartures(null, false, "", true);
+
+    searchButton.addEventListener("click", () => {
+      const query = searchInput.value.trim();
+      if (query === "") {
+        // 検索バーが空の場合もメッセージを表示
+        loadDepartures(null, false, "", true);
+      } else {
+        // 入力されたキーワードで検索
+        loadDepartures(null, true, query);
+      }
+    });
+  } else if (timetableRadio.checked) {
+    // 時刻表モード
+    loadDepartures(null, true); // 全行表示
   }
 }
 
 // 初期処理
 document.addEventListener("DOMContentLoaded", () => {
+  // 新たに「時刻表モード」を追加
+  const modeSelection = document.querySelector(".mode-selection");
+  const timetableModeLabel = document.createElement("label");
+  timetableModeLabel.innerHTML = `
+    <input type="radio" id="timetable-mode" name="mode" value="timetable"> 時刻表
+  `;
+  modeSelection.appendChild(timetableModeLabel);
+
   document.querySelectorAll("input[name='mode']").forEach(radio => {
     radio.addEventListener("change", handleModeChange);
   });
