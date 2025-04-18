@@ -84,29 +84,3 @@ tr:hover {
   font-style: italic;
   color: #555;
 }
-
-/* お知らせ行のスタイル */
-.announcement-cell {
-  position: relative;
-  overflow: hidden;
-  height: 40px;
-  background-color: #f9f9f9;
-}
-
-.scrolling-announcement {
-  position: absolute;
-  white-space: nowrap;
-  animation: scroll-horizontal 10s linear infinite;
-  font-weight: bold;
-  color: #e74c3c;
-  font-size: 16px;
-}
-
-@keyframes scroll-horizontal {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(-100%);
-  }
-}
