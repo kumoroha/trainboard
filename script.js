@@ -114,10 +114,11 @@ function handleModeChange() {
     timeInput.addEventListener("change", () => loadDepartures(timeInput.value));
     loadDepartures(timeInput.value);
   } else if (searchRadio.checked) {
+    // 検索モードでは全行を初期表示
+    loadDepartures(null, true);
     const searchInput = document.getElementById("search-input");
     const searchButton = document.getElementById("search-button");
     searchButton.addEventListener("click", () => loadDepartures(null, true, searchInput.value));
-    loadDepartures(null, true);
   }
 }
 
