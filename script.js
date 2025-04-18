@@ -13,7 +13,7 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
 
     const trainData = await response.json();
     const departureList = document.getElementById("departure-list");
-    departureList.innerHTML = ""; // 初期化
+    departureList.innerHTML = ""; // リストを初期化
 
     const now = new Date();
     const currentTime = specifiedTime 
@@ -42,6 +42,7 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
       filteredTrains = filteredTrains.slice(0, 4);
     }
 
+    // 列車データをテーブルに追加
     filteredTrains.forEach(train => {
       const row = document.createElement("tr");
       row.innerHTML = `
@@ -54,6 +55,7 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
       departureList.appendChild(row);
     });
 
+    // データがない場合、メッセージを表示
     if (filteredTrains.length === 0) {
       const noDataRow = document.createElement("tr");
       noDataRow.innerHTML = `
@@ -72,21 +74,24 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
   }
 }
 
-// モード切り替え
+// モード切り替え処理
 function handleModeChange() {
   const realtimeRadio = document.getElementById("realtime-mode");
   const specifiedRadio = document.getElementById("specified-mode");
   const searchRadio = document.getElementById("search-mode");
 
+  // モードに応じて入力フィールドを表示・非表示
   document.getElementById("time-input-container").classList.toggle("hidden", !specifiedRadio.checked);
   document.getElementById("search-input-container").classList.toggle("hidden", !searchRadio.checked);
 
-  clearInterval(intervalId);
+  clearInterval(intervalId); // リアルタイム更新の停止
 
   if (realtimeRadio.checked) {
+    // リアルタイムモード
     loadDepartures();
     intervalId = setInterval(() => loadDepartures(), 60000); // 毎分更新
   } else if (specifiedRadio.checked) {
+    // 時間指定モード
     const timeInput = document.getElementById("time-input");
     timeInput.addEventListener("change", () => loadDepartures(timeInput.value));
     loadDepartures(timeInput.value);
@@ -105,5 +110,5 @@ document.addEventListener("DOMContentLoaded", () => {
     radio.addEventListener("change", handleModeChange);
   });
 
-  handleModeChange();
+  handleModeChange(); // 初期モード設定
 });
