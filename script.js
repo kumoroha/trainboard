@@ -60,8 +60,10 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
     const announcementRow = document.createElement("tr");
     announcementRow.id = "announcement-row";
     announcementRow.innerHTML = `
-      <td colspan="5" style="text-align: center; font-weight: bold; color: #e74c3c;">
-        ${announcements[announcementIndex]}
+      <td colspan="5" class="announcement-cell">
+        <div class="scrolling-announcement">
+          ${announcements[announcementIndex]}
+        </div>
       </td>
     `;
     departureList.appendChild(announcementRow);
@@ -87,13 +89,9 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
 // お知らせを更新
 function updateAnnouncement() {
   announcementIndex = (announcementIndex + 1) % announcements.length;
-  const announcementRow = document.getElementById("announcement-row");
-  if (announcementRow) {
-    announcementRow.innerHTML = `
-      <td colspan="5" style="text-align: center; font-weight: bold; color: #e74c3c;">
-        ${announcements[announcementIndex]}
-      </td>
-    `;
+  const scrollingAnnouncement = document.querySelector(".scrolling-announcement");
+  if (scrollingAnnouncement) {
+    scrollingAnnouncement.textContent = announcements[announcementIndex];
   }
 }
 
