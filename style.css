@@ -1,4 +1,8 @@
 /* ベーススタイル */
+html {
+  font-size: 18px; /* 基本のフォントサイズを拡大 */
+}
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -22,6 +26,7 @@ main {
 
 h1 {
   margin: 0;
+  font-size: 2em;
 }
 
 .mode-selection {
@@ -31,7 +36,7 @@ h1 {
 
 label {
   margin-right: 15px;
-  font-size: 16px;
+  font-size: 1.2em; /* フォントサイズを拡大 */
 }
 
 .hidden {
@@ -44,6 +49,21 @@ label {
   margin-bottom: 20px;
 }
 
+/* ボタンのスタイル */
+button {
+  font-size: 1.1em; /* ボタンのフォントサイズを拡大 */
+  padding: 10px 15px; /* ボタンのサイズを調整 */
+  border: 1px solid #333;
+  background-color: #0056b3;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #333;
+  color: white;
+}
+
 /* テーブルスタイル */
 table {
   width: 100%;
@@ -54,7 +74,8 @@ table {
 th, td {
   border: 1px solid #ddd;
   text-align: center;
-  padding: 8px;
+  padding: 10px; /* セルの余白を拡大 */
+  font-size: 1.1em; /* セル内のフォントサイズを拡大 */
 }
 
 th {
