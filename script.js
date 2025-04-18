@@ -2,8 +2,6 @@
 const apiURL = "./departures.json";
 
 let intervalId = null; // リアルタイム更新用
-let announcements = ["お知らせ1: ご利用ありがとうございます", "お知らせ2: 運行情報にご注意ください", "お知らせ3: 本日も良い旅を！"];
-let announcementIndex = 0;
 
 // 発車標データを取得して表示
 async function loadDepartures(specifiedTime = null, allRows = false, searchQuery = "") {
@@ -56,18 +54,6 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
       departureList.appendChild(row);
     });
 
-    // お知らせを5行目に追加
-    const announcementRow = document.createElement("tr");
-    announcementRow.id = "announcement-row";
-    announcementRow.innerHTML = `
-      <td colspan="5" class="announcement-cell">
-        <div class="scrolling-announcement">
-          ${announcements[announcementIndex]}
-        </div>
-      </td>
-    `;
-    departureList.appendChild(announcementRow);
-
     if (filteredTrains.length === 0) {
       const noDataRow = document.createElement("tr");
       noDataRow.innerHTML = `
@@ -83,15 +69,6 @@ async function loadDepartures(specifiedTime = null, allRows = false, searchQuery
         <td colspan="5" style="text-align: center; color: red;">データの取得に失敗しました</td>
       </tr>
     `;
-  }
-}
-
-// お知らせを更新
-function updateAnnouncement() {
-  announcementIndex = (announcementIndex + 1) % announcements.length;
-  const scrollingAnnouncement = document.querySelector(".scrolling-announcement");
-  if (scrollingAnnouncement) {
-    scrollingAnnouncement.textContent = announcements[announcementIndex];
   }
 }
 
@@ -129,6 +106,4 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   handleModeChange();
-
-  setInterval(updateAnnouncement, 5000); // 5秒ごとにお知らせを更新
 });
